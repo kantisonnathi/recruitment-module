@@ -12,12 +12,21 @@
 <br>
 <br>
 <div class="container">
-    Choose an Interviewer
-    <SELECT name="interviewer">
-    {% for interviewer in interviewers %}
-        <option value={{interviewer.id}}>{{interviewer.name}}</option>
-    {% endfor %}
-    </SELECT>
+    <form action="" method="post" >
+        {{ form.csrf_token }}
+        <div class="form-group">
+            {{ form.candidate }}
+        </div>
+        Choose an Interviewer
+        <SELECT name="interviewer">
+            {% for interviewer in interviewers %}
+                <option value={{interviewer.id}}>{{interviewer.name}}</option>
+            {% endfor %}
+        </SELECT>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
 </div>
 
 

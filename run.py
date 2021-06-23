@@ -1,8 +1,9 @@
-from flask import Flask, render_template, url_for, request
+from flask import Flask, render_template, request
 from flask_wtf import FlaskForm
+from wtforms.fields import StringField, SubmitField
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = '5791628bb0b13ce0c676dfde280ba245'
 
 candidates = [
     {
@@ -39,7 +40,7 @@ candidates = [
 interviews = [
     {
         'candidate_name': 'Ganesh',
-        'Interviewer_name': 'Bala',
+        'interviewer_name': 'Bala',
         'feedback': 'Good',
         'selected': 'Yes',
         'round': 3
@@ -94,12 +95,19 @@ def recruiterDetails():
     return render_template('recruiter_details.html', recruiter=recruiter)
 
 
-@app.route('/scheduleInterview/<candidate_id>', methods=['GET','POST'])
-def scheduleInterview(candidate_id):
+@app.route('/scheduleInterview/<candidate_id_str>', methods=['GET', 'POST'])
+def scheduleInterview(candidate_id_str):
     # if request.method == 'POST':
-
+    candidate_id = int(candidate_id_str)
     candidate = getCandidateFromID(candidate_id) # query database for available interviewers instead of this method
-    return render_template('schedule_interview.html', candidate=candidate, interviewers=interviewers)
+    interview_form = ScheduleInterviewForm()
+    if request.method == 'POST':
+        interviewer_name = request.form.get('interviewer')
+        interviews.append({
+            'candidate_name': candidate['name'],
+            'interviewer_name': interviewer_name
+        })
+    return render_template('schedule_interview.html', candidate=candidate, interviewers=interviewers, form=interview_form)
 
 
 def getCandidateFromID(candidate_id):
@@ -108,4 +116,7 @@ def getCandidateFromID(candidate_id):
             return candidate
 
 
+class ScheduleInterviewForm(FlaskForm):
+    interviewer = StringField('Interviewer name')
+    submit = SubmitField('Submit')
 
