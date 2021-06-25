@@ -14,9 +14,6 @@
 <div class="container">
     <form action="" method="post" >
         {{ form.csrf_token }}
-        <div class="form-group">
-            {{ form.candidate }}
-        </div>
         Choose an Interviewer
         <SELECT name="interviewer">
             {% for interviewer in interviewers %}

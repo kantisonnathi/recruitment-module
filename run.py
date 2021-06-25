@@ -99,15 +99,19 @@ def recruiterDetails():
 def scheduleInterview(candidate_id_str):
     # if request.method == 'POST':
     candidate_id = int(candidate_id_str)
-    candidate = getCandidateFromID(candidate_id) # query database for available interviewers instead of this method
+    candidate = getCandidateFromID(candidate_id)  # query database for available interviewers instead of this method
     interview_form = ScheduleInterviewForm()
     if request.method == 'POST':
         interviewer_name = request.form.get('interviewer')
         interviews.append({
             'candidate_name': candidate['name'],
-            'interviewer_name': interviewer_name
+            'interviewer_name': interviewer_name,
+            'selected': 'No',
+            'round': 1,
+            'feedback': 'N/A'
         })
-    return render_template('schedule_interview.html', candidate=candidate, interviewers=interviewers, form=interview_form)
+    return render_template('schedule_interview.html', candidate=candidate, interviewers=interviewers,
+                           form=interview_form)
 
 
 def getCandidateFromID(candidate_id):
@@ -119,4 +123,3 @@ def getCandidateFromID(candidate_id):
 class ScheduleInterviewForm(FlaskForm):
     interviewer = StringField('Interviewer name')
     submit = SubmitField('Submit')
-
