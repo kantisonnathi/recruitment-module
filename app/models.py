@@ -32,6 +32,7 @@ class CandidateProfession(db.Model):
 
 class CandidateEducation(db.Model):
     # many to one with candidate
+    id = db.Column(db.Integer, primary_key=True)
     institution_name = db.Column(db.String(40))
     start_year = db.Column(db.String(4))
     end_year = db.Column(db.String(4))
