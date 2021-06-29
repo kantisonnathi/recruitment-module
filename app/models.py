@@ -1,4 +1,11 @@
-from app import db
+from datetime import datetime
+from app import db, login_manager
+from flask_login import UserMixin
+
+
+@login_manager.user_loader
+def load_user(employee_id):
+    return Employee.query.get(int(employee_id))
 
 
 class Candidate(db.Model):
@@ -6,11 +13,16 @@ class Candidate(db.Model):
     first_name = db.Column(db.String(20))
     last_name = db.Column(db.String(20))
     contact_number = db.Column(db.String(10))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(255))
     pan_card = db.Column(db.String(10))
     current_location = db.Column(db.String(20))
     status = db.Column(db.String(10))
+    candidate_compensation = db.relationship('CandidateCompensation', backref='candidate', uselist=False)  # one to
+    # one with candidate compensation
+    candidate_professions = db.relationship('CandidateProfession', backref='candidate')  # one to many with candidate
+    # profession
+    candidate_educations = db.relationship('CandidateEducation', backref='candidate')  # one to many w education
 
 
 class CandidateCompensation(db.Model):
@@ -41,21 +53,24 @@ class CandidateEducation(db.Model):
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))  # many to one with candidate
 
 
-class Employee(db.Model):
+class Employee(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(30))
     last_name = db.Column(db.String(30))
     contact_number = db.Column(db.String(10))
-    email = db.Column(db.String(100))
+    email = db.Column(db.String(100), unique=True)
     password = db.Column(db.String(255))
     position = db.Column(db.String(20))
     role = db.Column(db.String(20))
+    recruiter = db.relationship('Recruiter', backref='employee', uselist=False)
+    interviewer = db.relationship('Interviewer', backref='employee', uselist=False)
+    manager = db.relationship('Manager', backref='employee', uselist=False)
 
 
 class Interviewer(db.Model):
-    # one to many relation with interview
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))  # one to one with employee
+    interviews = db.relationship('Interview', backref='interviewer')  # one to many relation with interview
 
 
 class Interview(db.Model):
@@ -79,9 +94,10 @@ class Manager(db.Model):
 
 
 class Recruiter(db.Model):
-    # one to many with interview. (scheduling)
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))  # one to one with employee
+    interviews = db.relationship('Interview', backref='recruiter')  # one to many with interview. (scheduling)
+
 
 
 
