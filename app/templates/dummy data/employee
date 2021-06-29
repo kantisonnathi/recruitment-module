@@ -1,0 +1,35 @@
+from app import db -> imports db
+from app.models import Interviewer, Employee, Recruiter, Interview, Candidate
+
+db.drop_all() -> this ensures old data is wiped
+
+db.create_all()
+
+emp = Employee(first_name='emp1', last_name='last1', contact_number='+91emp1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Interviewer')
+db.session.add(emp)
+emp1 = Employee(first_name='emp2', last_name='last2', contact_number='+91emp2', email='emp2@gmail.com', password='pwd', position='senior manager', role='Recruiter')
+db.session.add(emp1)
+
+
+interviewer1 = Interviewer(employee_id=emp.id)
+db.session.add(interviewer1)
+
+candidate = Candidate(first_name='cand1', last_name='last', contact_number='+91cand', email='cand@gmail.com', password='pwd', pan_card='pan', current_location='hyd', status='none')
+db.session.add(candidate)
+
+recruiter = Recruiter(employee_id=2)
+db.session.add(recruiter)
+
+db.session.commit()
+
+
+import datetime
+time = datetime.time(6,30,30)
+date = datetime.date(2021,6,29)
+
+# just dummy data. don't worry about accuracy
+
+interview = Interview(start_time=time, end_time=time, date=date, round=1, meet_link='lol', feedback='lol', next_round=False, is_done=True, interviewer_id=1, candidate_id=1, recruiter_id=1)
+
+
+
