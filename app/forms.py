@@ -10,3 +10,6 @@ class LoginForm(FlaskForm):
     email = StringField('Email')  # pass in validators later
     password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Login')
+
+
+

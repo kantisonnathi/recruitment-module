@@ -8,16 +8,22 @@ from app.models import Employee
 
 @app.route('/', methods=['GET', 'POST'])
 def login():
-    print('we are in the login method')
+    if current_user.is_authenticated:
+        return render_template('manager_candidates.html')
     form = LoginForm()
-    print('made a form')
     if request.method == 'POST' and form.validate_on_submit():
-        print('here')
         employee = Employee.query.filter_by(email=form.email.data).first()
         if employee and employee.password == form.password.data:
             login_user(employee)
             return render_template('manager_candidates.html')
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
-    print('22')
     return render_template('login.html', title='Login', form=form)
+
+
+@app.route('/interview/new')
+def createNewCandidate():
+    return render_template('manager_candidates.html')
+
+
+
