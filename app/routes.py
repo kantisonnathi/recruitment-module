@@ -6,6 +6,7 @@ from app.forms import LoginForm, InterviewForm
 from app.models import Employee, Candidate, Interview, Interviewer
 
 
+#recruiter routes
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -14,7 +15,7 @@ def login():
             return render_template('manager_candidates.html', candidates=candidates)
         else:
             candidates = Candidate.query.order_by(Candidate.id)
-            return render_template('manager_candidates.html',candidates = candidates)
+            return render_template('all_candidates.html',candidates = candidates)
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         employee = Employee.query.filter_by(email=form.email.data).first()
@@ -25,7 +26,7 @@ def login():
                 return render_template('manager_candidates.html',candidates = candidates)
             else:
                 candidates = Candidate.query.order_by(Candidate.id)
-                return render_template('manager_candidates.html',candidates = candidates)
+                return render_template('all_candidates.html',candidates = candidates)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -55,3 +56,14 @@ def createNewCandidate(candidate_id_str):
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+
+
+
+
+# manager routes
+
+@app.route("/final_selected_candidates")
+def final_selected_candidates():
+    candidates = Candidate.query.order_by(Candidate.id)
+    return render_template('final_selected_candidates.html',candidates = candidates)
