@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect, request
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 from app import app
 from app.forms import LoginForm, InterviewForm
@@ -9,13 +9,23 @@ from app.models import Employee, Candidate, Interview, Interviewer
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return render_template('manager_candidates.html')
+        if current_user.role == "Manager":
+            candidates = Candidate.query.order_by(Candidate.id)
+            return render_template('manager_candidates.html', candidates=candidates)
+        else:
+            candidates = Candidate.query.order_by(Candidate.id)
+            return render_template('manager_candidates.html',candidates = candidates)
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         employee = Employee.query.filter_by(email=form.email.data).first()
         if employee and employee.password == form.password.data:
             login_user(employee)
-            return render_template('manager_candidates.html')
+            if current_user.role == "Manager":
+                candidates = Candidate.query.order_by(Candidate.id)
+                return render_template('manager_candidates.html',candidates = candidates)
+            else:
+                candidates = Candidate.query.order_by(Candidate.id)
+                return render_template('manager_candidates.html',candidates = candidates)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -41,3 +51,7 @@ def createNewCandidate(candidate_id_str):
 
 
 
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
