@@ -77,7 +77,7 @@ def info(candidate_id):
 
 @app.route('/candidate_interviews/<int:candidate_id>')
 def candidate_interviews(candidate_id):
-    interviews = Interview.query.filter_by(candidate_id=candidate_id)
+    interviews = Interview.query.filter_by(candidate_id=candidate_id).order_by(Interview.round)
     cur_candidate = Candidate.query.get_or_404(candidate_id)
     return render_template('interview_info.html', interviews=interviews, cur_candidate=cur_candidate)
 
