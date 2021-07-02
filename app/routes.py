@@ -1,21 +1,36 @@
 from flask import render_template, url_for, flash, redirect, request
-from flask_login import current_user, login_user
+from flask_login import current_user, login_user, logout_user
 
 from app import app
 from app.forms import LoginForm, InterviewForm
 from app.models import Employee, Candidate, Interview, Interviewer
 
+# candidate forms
+from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidatePersonalDetails
 
+
+
+#recruiter routes
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return render_template('manager_candidates.html')
+        if current_user.role == "Manager":
+            candidates = Candidate.query.order_by(Candidate.id)
+            return render_template('manager_candidates.html', candidates=candidates)
+        else:
+            candidates = Candidate.query.order_by(Candidate.id)
+            return render_template('all_candidates.html',candidates = candidates)
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         employee = Employee.query.filter_by(email=form.email.data).first()
         if employee and employee.password == form.password.data:
             login_user(employee)
-            return render_template('manager_candidates.html')
+            if current_user.role == "Manager":
+                candidates = Candidate.query.order_by(Candidate.id)
+                return render_template('manager_candidates.html',candidates = candidates)
+            else:
+                candidates = Candidate.query.order_by(Candidate.id)
+                return render_template('all_candidates.html',candidates = candidates)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -40,4 +55,44 @@ def createNewCandidate(candidate_id_str):
     return render_template('new_interview.html', title='Schedule Interview', form=form, interviewers=interviewers)
 
 
+
+@app.route("/logout")
+def logout():
+    logout_user()
+    return redirect(url_for('login'))
+
+
+
+
+
+# manager routes
+
+@app.route("/final_selected_candidates")
+def final_selected_candidates():
+    candidates = Candidate.query.order_by(Candidate.id)
+    return render_template('final_selected_candidates.html',candidates = candidates)
+
+# candidate routes
+
+# candidate application link
+@app.route('/application-form', methods=['GET','POST'])
+def application():
+    form = CandidatePersonalDetails()
+    return render_template('candidate_application.html', title='application', form=form)
+
+# candidate login link
+@app.route('/candidate-login', methods=['GET', 'POST'])
+def candidateLogin():
+    form=CandidateLoginForm()
+    if form.validate_on_submit():
+        return redirect(url_for('application'))
+    return render_template('candidate_login.html', title='candidateLogin', form=form)
+
+#candidate Registration link
+@app.route('/candidate-registration', methods=['GET', 'POST'])
+def candidateRegister():
+    form = CandidateRegistrationForm()
+    if request.method=='POST':
+        return redirect(url_for('candidateLogin'))
+    return render_template('candidate_registration.html', title='candidateRegister', form=form)
 

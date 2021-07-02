@@ -1,6 +1,6 @@
 {% extends 'manager_layout.html' %}
 {% block content %}
-      <table class="table table-striped">
+      <table class="table table-striped" style="width:100%;">
         <thead>
           <tr>
 
@@ -8,24 +8,19 @@
             <th scope="col">Details</th>
             <th scope="col">History</th>
             <th scope="col">Status</th>
-
           </tr>
         </thead>
         <tbody>
           {% for candidate in candidates %}
-
+          {% if candidate.status == 'HIRE' %}
           <tr>
             <td><b>{{ candidate.first_name }} {{candidate.last_name}}</b></td>
             <td> <a ><button type="button" class="btn btn-primary">Info</button></a></td>
             <td> <a ><button type="button" class="btn btn-primary">Interviews</button></a></td>
-            <!--  -->
-            {% if candidate.status == 'HIRE' %}
-                <td>Hired</td>
-            {% else %}
-                <td> <a ><button type="button" class="btn btn-primary">Update</button></a></td>
-            {% endif %}
+            <!-- <td> <a ><button type="button" class="btn btn-primary">Update</button></a></td> -->
+            <td>Hired</td>
           </tr>
-
+          {% endif %}
           {% endfor %}
         </tbody>
     </table>
