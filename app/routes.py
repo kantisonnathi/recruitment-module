@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app, db
-from app.forms import LoginForm, InterviewForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm
 from app.models import Employee, Candidate, Interview, Interviewer, Position
 
 # candidate forms
@@ -86,6 +86,25 @@ def final_selected_candidates():
     candidates = Candidate.query.order_by(Candidate.id)
     return render_template('final_selected_candidates.html', candidates=candidates)
 
+
+@app.route('/info/<int:candidate_id>')
+def info(candidate_id):
+    cur_candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('candidate_info.html', cur_candidate=cur_candidate)
+
+
+@app.route('/candidate_interviews/<int:candidate_id>')
+def candidate_interviews(candidate_id):
+    interviews = Interview.query.filter_by(candidate_id=candidate_id).order_by(Interview.round)
+    cur_candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('interview_info.html', interviews=interviews, cur_candidate=cur_candidate)
+
+
+@app.route('/manager_feedback/<int:candidate_id>')
+def manager_feedback(candidate_id):
+    form = ManagerFeedbackForm()
+    candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('manager_feedback.html', candidate=candidate, form=form)
 
 # candidate routes
 
