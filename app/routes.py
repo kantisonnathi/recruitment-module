@@ -88,7 +88,6 @@ def application():
         redirect(url_for('candidateLoginHome'))
     return render_template('candidate_application.html', title='application', form=form)
 
-
 # candidate login link
 @app.route('/candidate-login', methods=['GET', 'POST'])
 def candidateLogin():
@@ -96,14 +95,6 @@ def candidateLogin():
     if form.validate_on_submit():
         return redirect(url_for('application'))
     return render_template('candidate_login.html', title='candidateLogin', form=form)
-
-# candidate link after he logins
-
-''' @app.route('/candidate-home', methods=['GET', 'POST'])
-def candidateLoginHome():
-    form = CandidateLoginHome()
-    return render_template('candidate_home.html', title='candidate_home', form=form)
-'''
 
 # candidate Registration link
 @app.route('/candidate-registration', methods=['GET', 'POST'])

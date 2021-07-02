@@ -42,6 +42,3 @@ class CandidateApplicationDetails(FlaskForm):
     noticeperiod = IntegerField('Notice Period', validators=[DataRequired()])
     buyoutoption = RadioField('Buyout Option', validators=[DataRequired()])
     submit = SubmitField('Apply')
-
-class CandidateLoginHome():
-    submit = SubmitField('Application form')
