@@ -22,3 +22,9 @@ class InterviewForm(FlaskForm):
     meet_link = StringField('Meet link')
     submit = SubmitField('Submit')
 
+
+#manager Class
+class ManagerFeedbackForm(FlaskForm):
+    feedback = StringField('Feedback', validators=[DataRequired()])
+    candidate_status = StringField('Status',validators=[DataRequired()])
+    submit = SubmitField('Submit')

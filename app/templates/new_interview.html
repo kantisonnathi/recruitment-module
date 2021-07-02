@@ -4,14 +4,14 @@
         <form method="post" action="">
             {{ form.hidden_tag() }}
             <fieldset class="form-group">
-                <legend class="border-bottom-b=mb-4">
+                <legend class="border-bottom-b-mb-4">
                     Schedule New Interview
                 </legend>
                 <div class="form-group">
-                    <label>Interviewer</label>
-                    <select name="interviewer">
+                    <label for="interviewer">Interviewer</label>
+                    <select name="interviewer" class="btn btn-secondary dropdown-toggle ">
                         {% for interviewer in interviewers %}
-                            <option value={{interviewer.interviewer.id}}>{{interviewer.first_name}}</option>
+                            <option class="dropdown-item" value={{interviewer.interviewer.id}}>{{interviewer.first_name}}</option>
                         {% endfor %}
                     </select>
                 </div>
