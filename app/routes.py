@@ -2,15 +2,14 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app
-from app.forms import LoginForm, InterviewForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm
 from app.models import Employee, Candidate, Interview, Interviewer
 
 # candidate forms
 from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidateApplicationDetails
 
 
-
-#recruiter routes
+# recruiter routes
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -19,7 +18,7 @@ def login():
             return render_template('manager_candidates.html', candidates=candidates)
         else:
             candidates = Candidate.query.order_by(Candidate.id)
-            return render_template('all_candidates.html',candidates = candidates)
+            return render_template('all_candidates.html', candidates=candidates)
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         employee = Employee.query.filter_by(email=form.email.data).first()
@@ -27,10 +26,10 @@ def login():
             login_user(employee)
             if current_user.role == "Manager":
                 candidates = Candidate.query.order_by(Candidate.id)
-                return render_template('manager_candidates.html',candidates = candidates)
+                return render_template('manager_candidates.html', candidates=candidates)
             else:
                 candidates = Candidate.query.order_by(Candidate.id)
-                return render_template('all_candidates.html',candidates = candidates)
+                return render_template('all_candidates.html', candidates=candidates)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
     return render_template('login.html', title='Login', form=form)
@@ -55,14 +54,10 @@ def createNewCandidate(candidate_id_str):
     return render_template('new_interview.html', title='Schedule Interview', form=form, interviewers=interviewers)
 
 
-
 @app.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for('login'))
-
-
-
 
 
 # manager routes
@@ -70,29 +65,51 @@ def logout():
 @app.route("/final_selected_candidates")
 def final_selected_candidates():
     candidates = Candidate.query.order_by(Candidate.id)
-    return render_template('final_selected_candidates.html',candidates = candidates)
+    return render_template('final_selected_candidates.html', candidates=candidates)
+
+
+@app.route('/info/<int:candidate_id>')
+def info(candidate_id):
+    cur_candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('candidate_info.html', cur_candidate=cur_candidate)
+
+
+@app.route('/candidate_interviews/<int:candidate_id>')
+def candidate_interviews(candidate_id):
+    interviews = Interview.query.filter_by(candidate_id=candidate_id).order_by(Interview.round)
+    cur_candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('interview_info.html', interviews=interviews, cur_candidate=cur_candidate)
+
+
+@app.route('/manager_feedback/<int:candidate_id>')
+def manager_feedback(candidate_id):
+    form = ManagerFeedbackForm()
+    candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('manager_feedback.html', candidate=candidate, form=form)
+
 
 # candidate routes
 
 # candidate application link
-@app.route('/application-form', methods=['GET','POST'])
+@app.route('/application-form', methods=['GET', 'POST'])
 def application():
     form = CandidateApplicationDetails()
     return render_template('candidate_application.html', title='application', form=form)
 
+
 # candidate login link
 @app.route('/candidate-login', methods=['GET', 'POST'])
 def candidateLogin():
-    form=CandidateLoginForm()
+    form = CandidateLoginForm()
     if form.validate_on_submit():
         return redirect(url_for('application'))
     return render_template('candidate_login.html', title='candidateLogin', form=form)
 
-#candidate Registration link
+
+# candidate Registration link
 @app.route('/candidate-registration', methods=['GET', 'POST'])
 def candidateRegister():
     form = CandidateRegistrationForm()
-    if request.method=='POST':
+    if request.method == 'POST':
         return redirect(url_for('candidateLogin'))
     return render_template('candidate_registration.html', title='candidateRegister', form=form)
-
