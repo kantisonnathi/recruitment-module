@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <title>Candidate Registration</title>
+  </head>
+
+  <body>
+    <div class="content-section">
+      <form method="POST" action="">
+        {{ form.hidden_tag() }}
+        <br>
+        <fieldset class="form-group" style="width:60%">
+          <div class="form-group">
+            {{ form.email.label(class="form-control-label") }}
+            {{ form.email(class="form-control form-control-md") }}
+          </div>
+          <br>
+          <div class="form-group">
+            {{ form.create_password.label(class="form-control-label") }}
+            {{ form.create_password(class="form-control form-control-md") }}
+          </div>
+          <br>
+          <div class="form-group">
+            {{ form.confirm_password.label(class="form-control-label") }}
+            {{ form.confirm_password(class="form-control form-control-md") }}
+          </div>
+        </fieldset>
+        <br>
+        <div class="form-group">
+          {{ form.submit(class='btn btn-outline-info') }}
+        </div>
+        <br>
+        <div class="content-section">
+          <small class="text-muted">
+            Already Registered? <a class="ml-2" href="{{ url_for('candidateLogin') }}"> Login </a>
+          </small>
+        </div>
+      </form>
+    </div>
+    </body>
+
+</html>
