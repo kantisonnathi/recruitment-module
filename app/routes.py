@@ -6,7 +6,7 @@ from app.forms import LoginForm, InterviewForm
 from app.models import Employee, Candidate, Interview, Interviewer
 
 # candidate forms
-from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidatePersonalDetails
+from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidateApplicationDetails
 
 
 
@@ -77,7 +77,7 @@ def final_selected_candidates():
 # candidate application link
 @app.route('/application-form', methods=['GET','POST'])
 def application():
-    form = CandidatePersonalDetails()
+    form = CandidateApplicationDetails()
     return render_template('candidate_application.html', title='application', form=form)
 
 # candidate login link
