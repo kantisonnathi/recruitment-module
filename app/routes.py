@@ -5,9 +5,9 @@ from app import app
 from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm
 from app.models import Employee, Candidate, Interview, Interviewer
 
-# candidate forms
-#from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidatePersonalDetails
 
+# candidate forms
+# from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidatePersonalDetails
 
 
 # recruiter routes
@@ -74,23 +74,25 @@ def info(candidate_id):
     cur_candidate = Candidate.query.get_or_404(candidate_id)
     return render_template('candidate_info.html', cur_candidate=cur_candidate)
 
+
 @app.route('/candidate_interviews/<int:candidate_id>')
 def candidate_interviews(candidate_id):
-    interviews = Interview.query.filter_by(candidate_id = candidate_id)
+    interviews = Interview.query.filter_by(candidate_id=candidate_id)
     cur_candidate = Candidate.query.get_or_404(candidate_id)
-    return render_template('interview_info.html', interviews=interviews,cur_candidate=cur_candidate)
+    return render_template('interview_info.html', interviews=interviews, cur_candidate=cur_candidate)
 
 
-@app.route('/manager_feedback')
-def manager_feedback():
+@app.route('/manager_feedback/<int:candidate_id>')
+def manager_feedback(candidate_id):
     form = ManagerFeedbackForm()
-    return render_template('manager_feedback.html',form=form)
+    candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('manager_feedback.html', candidate=candidate, form=form)
 
 
 # candidate routes
 
 # candidate application link
-@app.route('/application-form', methods=['GET','POST'])
+@app.route('/application-form', methods=['GET', 'POST'])
 def application():
     form = CandidatePersonalDetails()
     return render_template('candidate_application.html', title='application', form=form)
@@ -99,16 +101,16 @@ def application():
 # candidate login link
 @app.route('/candidate-login', methods=['GET', 'POST'])
 def candidateLogin():
-    form=CandidateLoginForm()
+    form = CandidateLoginForm()
     if form.validate_on_submit():
         return redirect(url_for('application'))
     return render_template('candidate_login.html', title='candidateLogin', form=form)
 
-#candidate Registration link
+
+# candidate Registration link
 @app.route('/candidate-registration', methods=['GET', 'POST'])
 def candidateRegister():
     form = CandidateRegistrationForm()
-    if request.method=='POST':
+    if request.method == 'POST':
         return redirect(url_for('candidateLogin'))
     return render_template('candidate_registration.html', title='candidateRegister', form=form)
-

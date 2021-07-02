@@ -21,7 +21,7 @@
             {% if candidate.status == 'HIRE' %}
                 <td>Hired</td>
             {% else %}
-                <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback') }}">Update</a></td>
+                <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', candidate_id=candidate.id) }}">Update</a></td>
             {% endif %}
           </tr>
 
