@@ -10,12 +10,12 @@
   </head>
   <body>
     <div class="container">
+        <p>Candidate_Name : {{ cur_candidate.first_name }}</p>
         {% for interview in interviews %}
             <p><b>Interview</b></p>
-            <p>Candidate_Name : {{ interview.candidate_name }}</p>
-            <p>Interviewer_name : {{ interview.Interviewer_name }}</p>
+            <p>round Number : {{ interview.round }}</p>
             <p>Feedback : {{ interview.feedback }}</p>
-            <p>Selected  : {{ interview.selected }}</p>
+            <p>Selected  : {{ interview.next_round }}</p>
         {% endfor %}
 
     </div>

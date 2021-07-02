@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -6,26 +6,60 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
     <title>Candidate Registration</title>
   </head>
-
-  <body>
-    <div class="content-section">
+-->
+{% extends 'candidate_layout.html' %}
+{% block content %}
+    <div class="container">
       <form method="POST" action="">
         {{ form.hidden_tag() }}
         <br>
         <fieldset class="form-group" style="width:60%">
           <div class="form-group">
             {{ form.email.label(class="form-control-label") }}
-            {{ form.email(class="form-control form-control-md") }}
+              {% if form.email.errors %}
+                  {{ form.email(class="form-control form-control-md is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for errors in form.email.errors %}
+                              <span>
+                                  {{ errors }}
+                              </span>
+                          {% endfor %}
+                      </div>
+              {% else %}
+                  {{ form.email(class="form-control form-control-md") }}
+              {% endif %}
           </div>
           <br>
           <div class="form-group">
             {{ form.create_password.label(class="form-control-label") }}
-            {{ form.create_password(class="form-control form-control-md") }}
+              {% if form.create_password.errors %}
+                  {{ form.create_password(class="form-control form-control-md is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for errors in form.create_password.errors %}
+                              <span>
+                                  {{ errors }}
+                              </span>
+                          {% endfor %}
+                      </div>
+              {% else %}
+                  {{ form.create_password(class="form-control form-control-md") }}
+              {% endif %}
           </div>
           <br>
           <div class="form-group">
             {{ form.confirm_password.label(class="form-control-label") }}
-            {{ form.confirm_password(class="form-control form-control-md") }}
+              {% if form.confirm_password.errors %}
+                  {{ form.confirm_password(class="form-control form-control-md is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for errors in form.confirm_password.errors %}
+                              <span>
+                                  {{ errors }}
+                              </span>
+                          {% endfor %}
+                      </div>
+              {% else %}
+                  {{ form.confirm_password(class="form-control form-control-md") }}
+              {% endif %}
           </div>
         </fieldset>
         <br>
@@ -33,13 +67,11 @@
           {{ form.submit(class='btn btn-outline-info') }}
         </div>
         <br>
-        <div class="content-section">
+        <div class="container-md">
           <small class="text-muted">
             Already Registered? <a class="ml-2" href="{{ url_for('candidateLogin') }}"> Login </a>
           </small>
         </div>
       </form>
     </div>
-    </body>
-
-</html>
+{% endblock %}
