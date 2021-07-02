@@ -15,10 +15,7 @@ class LoginForm(FlaskForm):
 
 
 class InterviewForm(FlaskForm):
-    start_time = TimeField('Start time')
-    end_time = TimeField('End time')
     date = DateField('Date', validators=[DataRequired()], default=datetime.date.today(), format='%d-%m-%Y')
     round = IntegerField('Round')
-    meet_link = StringField('Meet link')
     submit = SubmitField('Submit')
 

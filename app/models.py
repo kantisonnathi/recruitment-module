@@ -8,6 +8,12 @@ def load_user(employee_id):
     return Employee.query.get(int(employee_id))
 
 
+applied_to = db.Table('applied_to',
+    db.Column('position_id', db.Integer, db.ForeignKey('position.id'), primary_key=True),
+    db.Column('candidate_id', db.Integer, db.ForeignKey('candidate.id'), primary_key=True)
+)
+
+
 class Candidate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20))
@@ -23,6 +29,8 @@ class Candidate(db.Model):
     candidate_professions = db.relationship('CandidateProfession', backref='candidate')  # one to many with candidate
     # profession
     candidate_educations = db.relationship('CandidateEducation', backref='candidate')  # one to many w education
+    positions_applied = db.relationship('Position', secondary=applied_to, lazy='subquery',
+                                        backref=db.backref('candidates', lazy=True))
 
 
 class CandidateCompensation(db.Model):
@@ -86,6 +94,7 @@ class Interview(db.Model):
     interviewer_id = db.Column(db.Integer, db.ForeignKey('interviewer.id'))  # many to one w interviewer
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))  # many to one w candidate
     recruiter_id = db.Column(db.Integer, db.ForeignKey('recruiter.id'))  # many to one w recruiter
+    position_id = db.Column(db.Integer, db.ForeignKey('position.id'))  # many to one w position
 
 
 class Manager(db.Model):
@@ -99,13 +108,8 @@ class Recruiter(db.Model):
     interviews = db.relationship('Interview', backref='recruiter')  # one to many with interview. (scheduling)
 
 
-
-
-
-
-
-
-
-
-
+class Position(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String)
+    interviewer = db.relationship('Interview', backref='position')  # oen to many w interview
 
