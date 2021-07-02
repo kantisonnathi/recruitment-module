@@ -1,16 +1,15 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
-	  <!--<link rel="stylesheet" href="{{ url_for('static', filename='mystyle.css') }}">-->
 
     <title>Candidate Application </title>
   </head>
 
-
-  <body>
+-->
+{% extends 'candidate_layout.html' %}
     {% block content %}
     <div class="container">
       <form method="POST" action="">
@@ -28,24 +27,24 @@
               <th scope="col"> {{ form.lastname.label(class="form-control-label") }} </th>
              </tr>
              <tr>
-              <th scope="col"> {{ form.firstname(class="form-control-label") }} </th>
-              <th scope="col"> {{ form.lastname(class="form-control-label") }} </th>
+              <td scope="col"> {{ form.firstname(class="form-control-label") }} </td>
+              <td scope="col"> {{ form.lastname(class="form-control-label") }} </td>
              </tr>
              <tr>
               <th scope="col"> {{ form.email.label(class="form-control-label") }} </th>
               <th scope="col"> {{ form.contact.label(class="form-control-label") }} </th>
              </tr>
              <tr>
-              <th scope="col"> {{ form.email(class="form-control-label") }} </th>
-              <th scope="col"> {{ form.contact(class="form-control-label") }} </th>
+              <td scope="col"> {{ form.email(class="form-control-label") }} </td>
+              <td scope="col"> {{ form.contact(class="form-control-label") }} </td>
              </tr>
              <tr>
               <th scope="col"> {{ form.residential_address.label(class="form-control-label") }} </th>
               <th scope="col"> {{ form.pancard.label(class="form-control-label") }} </th>
              </tr>
              <tr>
-              <th scope="col"> {{ form.residential_address(class="form-control-label") }} </th>
-              <th scope="col"> {{ form.pancard(class="form-control-label") }} </th>
+              <td scope="col"> {{ form.residential_address(class="form-control-label") }} </td>
+              <td scope="col"> {{ form.pancard(class="form-control-label") }} </td>
              </tr>
           </table>
         </div>
@@ -65,16 +64,16 @@
             <th scope="col"> {{ form.instituteplace.label(class="form-control-label") }} </th>
            </tr>
            <tr>
-            <th scope="col"> {{ form.institutename(class="form-control-label") }} </th>
-            <th scope="col"> {{ form.instituteplace(class="form-control-label") }} </th>
+            <td scope="col"> {{ form.institutename(class="form-control-label") }} </td>
+            <td scope="col"> {{ form.instituteplace(class="form-control-label") }} </td>
            </tr>
            <tr>
             <th scope="col"> {{ form.nameofthedegree.label(class="form-control-label") }} </th>
             <th scope="col"> {{ form.percentage.label(class="form-control-label") }} </th>
            </tr>
            <tr>
-            <th scope="col"> {{ form.nameofthedegree(class="form-control-label") }} </th>
-            <th scope="col"> {{ form.percentage(class="form-control-label") }} </th>
+            <td scope="col"> {{ form.nameofthedegree(class="form-control-label") }} </td>
+            <td scope="col"> {{ form.percentage(class="form-control-label") }} </td>
            </tr>
         </table>
         <br>
@@ -98,24 +97,24 @@
           <th scope="col"> {{ form.yearsofexperience.label(class="form-control-label") }} </th>
          </tr>
          <tr>
-          <th scope="col"> {{ form.currentposition(class="form-control-label") }} </th>
-          <th scope="col"> {{ form.yearsofexperience(class="form-control-label") }} </th>
+          <td scope="col"> {{ form.currentposition(class="form-control-label") }} </td>
+          <td scope="col"> {{ form.yearsofexperience(class="form-control-label") }} </td>
          </tr>
          <tr>
           <th scope="col"> {{ form.companyname.label(class="form-control-label") }} </th>
           <th scope="col"> {{ form.location.label(class="form-control-label") }} </th>
          </tr>
          <tr>
-          <th scope="col"> {{ form.companyname(class="form-control-label") }} </th>
-          <th scope="col"> {{ form.location(class="form-control-label") }} </th>
+          <td scope="col"> {{ form.companyname(class="form-control-label") }} </td>
+          <td scope="col"> {{ form.location(class="form-control-label") }} </td>
          </tr>
          <tr>
           <th scope="col"> {{ form.skillsets.label(class="form-control-label") }} </th>
           <th scope="col"> {{ form.linkedinprofile.label(class="form-control-label") }} </th>
          </tr>
          <tr>
-          <th scope="col"> {{ form.skillsets(class="form-control-label") }} </th>
-          <th scope="col"> {{ form.linkedinprofile(class="form-control-label") }} </th>
+          <td scope="col"> {{ form.skillsets(class="form-control-label") }} </td>
+          <td scope="col"> {{ form.linkedinprofile(class="form-control-label") }} </td>
          </tr>
       </table>
       </div>
@@ -135,16 +134,21 @@
             <th scope="col"> {{ form.currentctc.label(class="form-control-label") }} </th>
            </tr>
            <tr>
-            <th scope="col"> {{ form.expectedctc(class="form-control-label") }} </th>
-            <th scope="col"> {{ form.currentctc(class="form-control-label") }} </th>
+            <td scope="col"> {{ form.expectedctc(class="form-control-label") }} </td>
+            <td scope="col"> {{ form.currentctc(class="form-control-label") }} </td>
            </tr>
            <tr>
             <th scope="col"> {{ form.noticeperiod.label(class="form-control-label") }} </th>
             <th scope="col"> {{ form.buyoutoption.label(class="form-control-label") }} </th>
            </tr>
            <tr>
-            <th scope="col"> {{ form.noticeperiod(class="form-control-label") }} </th>
-            <th scope="col"> {{ form.buyoutoption(class="form-control-label") }} </th>
+            <td scope="col"> {{ form.noticeperiod(class="form-control-label") }} </td>
+            <td scope="col">
+                <input type="radio" name="buyout" id="yes" value="Yes">
+                <label for="yes"> Yes &nbsp; &nbsp; &nbsp;</label>
+                <input type="radio" name="buyoutno" id="no" value="No">
+                <label for="no"> No </label>
+            </td>
            </tr>
         </table>
         <br>
@@ -157,5 +161,3 @@
       </form>
     </div>
       {% endblock %}
-  </body>
-</html>

@@ -6,7 +6,7 @@ from app.forms import LoginForm, InterviewForm
 from app.models import Employee, Candidate, Interview, Interviewer
 
 # candidate forms
-from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidatePersonalDetails
+from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidateApplicationDetails, CandidateLoginHome
 
 
 
@@ -72,13 +72,22 @@ def final_selected_candidates():
     candidates = Candidate.query.order_by(Candidate.id)
     return render_template('final_selected_candidates.html',candidates = candidates)
 
+
+
+
+
 # candidate routes
+
+
 
 # candidate application link
 @app.route('/application-form', methods=['GET','POST'])
 def application():
-    form = CandidatePersonalDetails()
+    form = CandidateApplicationDetails()
+    if request.method == 'POST':
+        redirect(url_for('candidateLoginHome'))
     return render_template('candidate_application.html', title='application', form=form)
+
 
 # candidate login link
 @app.route('/candidate-login', methods=['GET', 'POST'])
@@ -88,11 +97,19 @@ def candidateLogin():
         return redirect(url_for('application'))
     return render_template('candidate_login.html', title='candidateLogin', form=form)
 
-#candidate Registration link
+# candidate link after he logins
+
+''' @app.route('/candidate-home', methods=['GET', 'POST'])
+def candidateLoginHome():
+    form = CandidateLoginHome()
+    return render_template('candidate_home.html', title='candidate_home', form=form)
+'''
+
+# candidate Registration link
 @app.route('/candidate-registration', methods=['GET', 'POST'])
 def candidateRegister():
     form = CandidateRegistrationForm()
-    if request.method=='POST':
+    if request.method == 'POST':
         return redirect(url_for('candidateLogin'))
     return render_template('candidate_registration.html', title='candidateRegister', form=form)
 

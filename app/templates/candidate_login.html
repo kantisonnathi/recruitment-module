@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -8,38 +8,64 @@
     <title>Candidate Login </title>
   </head>
 
-
-  <body>
-    <div class="content-section">
+-->
+{% extends 'candidate_layout.html' %}
+{% block content %}
+    <div class="container-md" >
       <form method="POST" action="">
         {{ form.hidden_tag() }}
         <br>
         <fieldset class="form-group" style="width:60%">
           <div class="form-group">
-            {{ form.email.label(class="form-control-label") }}
-            {{ form.email(class="form-control form-control-md") }}
+              {{ form.email.label(class="form-control-label") }}
+              {% if form.email.errors %}
+                  {{ form.email(class="form-control form-control-md is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for errors in form.email.errors %}
+                              <span>
+                                  {{ errors }}
+                              </span>
+                          {% endfor %}
+                      </div>
+              {% else %}
+                  {{ form.email(class="form-control form-control-md") }}
+              {% endif %}
           </div>
           <br>
           <div class="form-group">
-            {{ form.password.label(class="form-control-label") }}
-            {{ form.password(class="form-control form-control-md") }}
+              {{ form.password.label(class="form-control-label") }}
+              {% if form.password.errors %}
+                  {{ form.password(class="form-control form-control-md is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for errors in form.password.errors %}
+                              <span>
+                                  {{ errors }}
+                              </span>
+                          {% endfor %}
+                      </div>
+              {% else %}
+                  {{ form.password(class="form-control form-control-md") }}
+              {% endif %}
           </div>
-        </fieldset>
-        <br>
-        <div class="container>"
-        <div class="form-group">
-          {{ form.submit(class='btn btn-outline-info') }}
-        </div>
         <br>
         <div class="form-check">
           {{ form.remember(class="form-check-input") }}
           {{ form.remember.label(class="form-check-label") }}
         </div>
+        </fieldset>
+      <br>
+        <div class="form-group">
+          {{ form.submit(class='btn btn-outline-info') }}
+        </div>
         <small class="text-muted ml-2">
-          <a href="a">Forgot Password?</a>
+          <a href="#">Forgot Password?</a>
         </small>
-      </div>
       </form>
     </div>
-  </body>
-</html>
+    <br>
+    <div class="container-sm">
+        <small class="text-muted">
+            New User? <a clas="ml-2" href="{{ url_for('candidateRegister') }}">Sign Up</a>
+        </small>
+    </div>
+  {% endblock %}
