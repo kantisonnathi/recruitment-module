@@ -106,6 +106,10 @@ def manager_feedback(candidate_id):
     candidate = Candidate.query.get_or_404(candidate_id)
     return render_template('manager_feedback.html', candidate=candidate, form=form)
 
+# interviewer routes
+
+@app.route("/")
+
 # candidate routes
 
 
