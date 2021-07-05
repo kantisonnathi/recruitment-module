@@ -10,23 +10,30 @@
     </div>
     <div class="content-section">
         <legend class="border-bottom-b-mb-4">
-                Job Details
+            Job Details
         </legend>
         <p> Job Code: {{ job.id }}</p>
         <p> Job title: {{ job.title }}</p>
     </div>
     <div class="content-section">
         <legend class="border-bottom-b-mb-4">
-                Interviewer Details
+            Interviewer Details
         </legend>
-        <p> Name: {{ interviewer.first_name + ' ' + interviewer.last_name }}</p>
-        <p> Contact number: {{ interviewer.contact_number }}</p>
-        <p> Email: {{ interviewer.email }}</p>
     </div>
     <div class="content-section">
         <form method="post" action="">
-            {{ form.hidden_tag() }}
-            <div class="form-group"></div>
+            <div class="form-group">
+                <label for="start_time">Start Time: </label>
+                <select name="start_time" class="btn btn-secondary dropdown-toggle ">
+                    {% for start_time in times %}
+                        <option class="dropdown-item" value={{ start_time }}>{{start_time}}</option>
+                    {% endfor %}
+                </select>
+                <p>Note: An interview is 1 hour long, the end time for the interview is set automatically</p>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-outline-info">Submit</button>
+            </div>
         </form>
     </div>
 {% endblock %}
