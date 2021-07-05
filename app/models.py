@@ -32,6 +32,9 @@ class Candidate(db.Model):
     positions_applied = db.relationship('Position', secondary=applied_to, lazy='subquery',
                                         backref=db.backref('candidates', lazy=True))
 
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', name:' + str(self.first_name + ' ' + self.last_name)
+
 
 class CandidateCompensation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,11 +77,17 @@ class Employee(db.Model, UserMixin):
     interviewer = db.relationship('Interviewer', backref='employee', uselist=False)
     manager = db.relationship('Manager', backref='employee', uselist=False)
 
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', name: ' + str(self.first_name) + ' ' + str(self.last_name) + ', role: ' + str(self.role)
+
 
 class Interviewer(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))  # one to one with employee
     interviews = db.relationship('Interview', backref='interviewer')  # one to many relation with interview
+
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', emp id: ' + str(self.employee_id)
 
 
 class Interview(db.Model):
@@ -96,10 +105,16 @@ class Interview(db.Model):
     recruiter_id = db.Column(db.Integer, db.ForeignKey('recruiter.id'))  # many to one w recruiter
     position_id = db.Column(db.Integer, db.ForeignKey('position.id'))  # many to one w position
 
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', start_time: ' + str(self.start_time) + ', end time: ' + str(self.end_time) + ', date: ' + str(self.date) + ', candidate_id: ' + str(self.candidate_id) + ', interviewer id: ' + str(self.interviewer_id) + ', recruiter id:' + str(self.recruiter_id) + ', job: ' + str(self.position_id)
+
 
 class Manager(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))  # one to one with employee
+
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', employee id: ' + str(self.employee_id)
 
 
 class Recruiter(db.Model):
@@ -107,9 +122,15 @@ class Recruiter(db.Model):
     employee_id = db.Column(db.Integer, db.ForeignKey('employee.id'))  # one to one with employee
     interviews = db.relationship('Interview', backref='recruiter')  # one to many with interview. (scheduling)
 
+    def __repr__(self):
+        return 'id: ' + str(self.id) + 'employee id:' + str(self.employee_id)
+
 
 class Position(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     interviewer = db.relationship('Interview', backref='position')  # oen to many w interview
+
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', title: ' + self.title
 

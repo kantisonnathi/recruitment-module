@@ -5,7 +5,7 @@ db.drop_all() -> this ensures old data is wiped
 
 db.create_all()
 
-emp = Employee(first_name='emp1', last_name='last1', contact_number='+91emp1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Interviewer')
+emp = Employee(first_name='interviewer1', last_name='last1', contact_number='+91emp1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Interviewer')
 db.session.add(emp)
 emp3 = Employee(first_name='manager', last_name='last1', contact_number='+91emp3', email='emp3@gmail.com', password='pwd', position='senior manager', role='Manager')
 db.session.add(emp3)
@@ -38,5 +38,29 @@ position.candidates.append(candidate)
 db.session.add(position)
 db.session.commit()
 
+##############################
+
+from app import db
+from app.models import Interviewer, Employee, Recruiter, Interview, Candidate, Position
+
+recruiter1 = Employee(first_name='rec1', last_name='last1', contact_number='+91rec1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Recruiter')
+recr = Recruiter(employee_id=1)
+db.session.add(recruiter1)
+db.session.add(recr)
+db.session.commit()
+
+position = Position(title='job_1')
+db.session.add(position)
+db.session.commit()
 
 
+candidate = Candidate(first_name='cand2', last_name='last2', contact_number='+91cand2', email='cand2@gmail.com', password='pwd', pan_card='pan2', current_location='hyd', status='none')
+db.session.add(candidate)
+db.session.commit()
+
+import datetime
+time = datetime.time(6,30,30)
+date = datetime.date(2021,6,29)
+
+inte = Employee(first_name='interviewer1', last_name='last1', contact_number='+91emp1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Interviewer')
+i = Interviewer(employee_id = inte.id)

@@ -34,13 +34,14 @@ def login():
                 return render_template('all_candidates.html', candidates=candidates)
         else:
             flash('Login Unsuccessful. Please check email and password', 'danger')
+
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route('/candidate/<candidate_id_str>/job/<job_id_str>/interview/new', methods=['GET', 'POST'])
-def createNewInterview(candidate_id_str, job_id_str):
-    candidate = Candidate.query.filter_by(id=candidate_id_str).first()
-    job = Position.query.filter_by(id=job_id_str).first()
+@app.route('/candidate/<int:candidate_id>/job/<int:job_id>/interview/new', methods=['GET', 'POST'])
+def createNewInterview(candidate_id, job_id):
+    candidate = Candidate.query.filter_by(id=candidate_id).first()
+    job = Position.query.filter_by(id=job_id).first()
     interviewers = Employee.query.filter_by(role='Interviewer').all()
     form = InterviewForm()
     if request.method == 'POST' and form.validate_on_submit():
@@ -49,6 +50,10 @@ def createNewInterview(candidate_id_str, job_id_str):
         interviewer_id = request.form.get('interviewer')
         interview.interviewer_id = interviewer_id
         interview.recruiter_id = current_user.id
+        interview.candidate_id = candidate.id
+        interview.position_id = job_id
+        interview.date = datetime.datetime.strptime(request.form.get('date'), "%d-%m-%Y").date()
+        interview.round = request.form.get('round')
         db.session.add(interview)
         db.session.commit()
         return redirect('/interview/' + str(interview.id) + '/set')
@@ -56,11 +61,20 @@ def createNewInterview(candidate_id_str, job_id_str):
                            candidate=candidate, job=job)
 
 
+@app.route('/interview/<interview_id>/delete')
+def delete_interview(interview_id):
+    curr_interview = Interview.query.filter_by(id=interview_id)
+    Interview.query.filter_by(id=interview_id).delete()
+    db.session.commit()
+    return redirect(url_for('final_selected_candidates'))
+
+
 @app.route('/interview/<interview_id>/set', methods=['GET', 'POST'])
 def setInterviewTime(interview_id):
     curr_interview = Interview.query.filter_by(id=interview_id).first()
-    print(curr_interview.interviewer_id)
-    interviewer = Interviewer.query.filter_by(id=curr_interview.interviewer.id).first()
+    interviewer = Interviewer.query.filter_by(id=curr_interview.interviewer_id).first()
+    candidate = Candidate.query.filter_by(id=curr_interview.candidate_id).first()
+    job = Position.query.filter_by(id=curr_interview.position_id).first()
     interviews_by = Interview.query.filter_by(interviewer_id=interviewer.id).all()
     # assumption: assume hours start at 9 and end at 6, each interview can only be an hour long
     possible_start_times = time_population()
@@ -68,9 +82,29 @@ def setInterviewTime(interview_id):
         curr_time = interview.start_time
         if curr_time in possible_start_times:
             possible_start_times.remove(curr_time)
+    if request.method == 'POST':
+        print(request.form.get('start_time'))
+        start_time = datetime.datetime.strptime(request.form.get('start_time'), "%H:%M:%S").time()
+        print(start_time)
+        curr_interview.start_time = start_time
+        end_time = datetime.time(start_time.hour+1, start_time.minute, start_time.second)
+        curr_interview.end_time = end_time
+        db.session.add(curr_interview)
+        db.session.commit()
+        return redirect('/interview/' + interview_id)
 
-    print(possible_start_times)
-    return render_template('set_time_interview.html', )
+    return render_template('set_time_interview.html', candidate=candidate, job=job, interviewer=interviewer, times=possible_start_times)
+
+
+@app.route('/interview/<interview_id>', methods=['GET', 'POST'])
+def view_interview(interview_id):
+    curr_interview = Interview.query.filter_by(id=interview_id).first()
+    interviewer = Interviewer.query.filter_by(id=curr_interview.interviewer_id).first()
+    interviewer_emp = Employee.query.filter_by(id=interviewer.employee_id).first()
+    candidate = Candidate.query.filter_by(id=curr_interview.candidate_id).first()
+    job = Position.query.filter_by(id=curr_interview.position_id).first()
+    return render_template('view_interview.html', position=job, candidate=candidate, interviewer=interviewer_emp,
+                           interview=curr_interview)
 
 
 @app.route("/logout")
