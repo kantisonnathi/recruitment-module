@@ -134,11 +134,18 @@ def candidate_interviews(candidate_id):
     return render_template('interview_info.html', interviews=interviews, cur_candidate=cur_candidate)
 
 
-@app.route('/manager_feedback/<int:candidate_id>')
+@app.route('/manager_feedback/<int:candidate_id>', methods=['GET', 'POST'])
 def manager_feedback(candidate_id):
     form = ManagerFeedbackForm()
     candidate = Candidate.query.get_or_404(candidate_id)
-    return render_template('manager_feedback.html', candidate=candidate, form=form)
+    if request.method == 'GET':
+        return render_template('manager_feedback.html', candidate=candidate, form=form)
+    if request.method == 'POST':
+        if candidate.status == 'none':
+            candidate.status = form.candidate_status.data
+            db.session.add(candidate)
+            db.session.commit()
+            return redirect(url_for('final_selected_candidates'))
 
 # interviewer routes
 

@@ -9,9 +9,9 @@ def load_user(employee_id):
 
 
 applied_to = db.Table('applied_to',
-    db.Column('position_id', db.Integer, db.ForeignKey('position.id'), primary_key=True),
-    db.Column('candidate_id', db.Integer, db.ForeignKey('candidate.id'), primary_key=True)
-)
+                      db.Column('position_id', db.Integer, db.ForeignKey('position.id'), primary_key=True),
+                      db.Column('candidate_id', db.Integer, db.ForeignKey('candidate.id'), primary_key=True)
+                      )
 
 
 class Candidate(db.Model):
@@ -78,7 +78,8 @@ class Employee(db.Model, UserMixin):
     manager = db.relationship('Manager', backref='employee', uselist=False)
 
     def __repr__(self):
-        return 'id: ' + str(self.id) + ', name: ' + str(self.first_name) + ' ' + str(self.last_name) + ', role: ' + str(self.role)
+        return 'id: ' + str(self.id) + ', name: ' + str(self.first_name) + ' ' + str(self.last_name) + ', role: ' + str(
+            self.role)
 
 
 class Interviewer(db.Model):
@@ -106,7 +107,10 @@ class Interview(db.Model):
     position_id = db.Column(db.Integer, db.ForeignKey('position.id'))  # many to one w position
 
     def __repr__(self):
-        return 'id: ' + str(self.id) + ', start_time: ' + str(self.start_time) + ', end time: ' + str(self.end_time) + ', date: ' + str(self.date) + ', candidate_id: ' + str(self.candidate_id) + ', interviewer id: ' + str(self.interviewer_id) + ', recruiter id:' + str(self.recruiter_id) + ', job: ' + str(self.position_id)
+        return 'id: ' + str(self.id) + ', start_time: ' + str(self.start_time) + ', end time: ' + str(
+            self.end_time) + ', date: ' + str(self.date) + ', candidate_id: ' + str(
+            self.candidate_id) + ', interviewer id: ' + str(self.interviewer_id) + ', recruiter id:' + str(
+            self.recruiter_id) + ', job: ' + str(self.position_id)
 
 
 class Manager(db.Model):
@@ -134,3 +138,9 @@ class Position(db.Model):
     def __repr__(self):
         return 'id: ' + str(self.id) + ', title: ' + self.title
 
+
+# Manager Feedback model
+class ManagerFeedback:
+    id = db.Column(db.Integer, primary_key=True)
+    Feedback = db.Column(db.String(255))
+    Status = db.Column(db.String(20))
