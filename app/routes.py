@@ -92,7 +92,6 @@ def setInterviewTime(interview_id):
         db.session.add(curr_interview)
         db.session.commit()
         return redirect('/interview/' + interview_id)
-
     return render_template('set_time_interview.html', candidate=candidate, job=job, interviewer=interviewer, times=possible_start_times)
 
 
@@ -140,8 +139,8 @@ def manager_feedback(candidate_id):
     candidate = Candidate.query.get_or_404(candidate_id)
     return render_template('manager_feedback.html', candidate=candidate, form=form)
 
-# candidate routes
 
+# candidate routes
 
 # candidate application link
 @app.route('/application-form', methods=['GET', 'POST'])
