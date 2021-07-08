@@ -112,11 +112,8 @@ def view_all_interviews():
     interviews = Interview.query.all()
     for interview in interviews:
         current_candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
-        print(current_candidate)
         current_interviewer = Interviewer.query.filter_by(id=interview.interviewer_id).first()
-        print(current_interviewer)
         current_interviewer_emp = Employee.query.filter_by(id=current_interviewer.employee_id).first()
-        print(current_interviewer_emp)
         candidate_list[interview] = current_candidate
         interviewer_list[interview] = current_interviewer_emp
     return render_template('view_interview_list.html', candidates=candidate_list, interviewers=interviewer_list,
@@ -276,7 +273,6 @@ def inprogress_candidates():
 
 # interviewer routes
 
-@app.route("/")
 
 
 # candidate routes
