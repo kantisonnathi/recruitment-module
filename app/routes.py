@@ -146,6 +146,12 @@ def manager_feedback(candidate_id):
             db.session.commit()
             return redirect(url_for('final_selected_candidates'))
 
+@app.route('/inprogress_candidates')
+def inprogress_candidates():
+    candidates = Candidate.query.order_by(Candidate.id)
+    return render_template('inprogress_candidates.html', candidates=candidates)
+
+
 # interviewer routes
 
 @app.route("/")
