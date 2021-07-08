@@ -40,6 +40,7 @@ def login():
 
 @app.route('/candidate/<int:candidate_id>/job/<int:job_id>/interview/new', methods=['GET', 'POST'])
 def createNewInterview(candidate_id, job_id):
+    # TODO: need to change job id to application id whenever it's done.
     candidate = Candidate.query.filter_by(id=candidate_id).first()
     job = Position.query.filter_by(id=job_id).first()
     interviewers = Employee.query.filter_by(role='Interviewer').all()
@@ -63,7 +64,6 @@ def createNewInterview(candidate_id, job_id):
 
 @app.route('/interview/<interview_id>/delete')
 def delete_interview(interview_id):
-    curr_interview = Interview.query.filter_by(id=interview_id)
     Interview.query.filter_by(id=interview_id).delete()
     db.session.commit()
     return redirect(url_for('final_selected_candidates'))
@@ -104,6 +104,24 @@ def view_interview(interview_id):
     job = Position.query.filter_by(id=curr_interview.position_id).first()
     return render_template('view_interview.html', position=job, candidate=candidate, interviewer=interviewer_emp,
                            interview=curr_interview)
+
+
+@app.route('/interview/all')
+def view_all_interviews():
+    candidate_list = {}
+    interviewer_list = {}
+    interviews = Interview.query.all()
+    for interview in interviews:
+        current_candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+        print(current_candidate)
+        current_interviewer = Interviewer.query.filter_by(id=interview.interviewer_id).first()
+        print(current_interviewer)
+        current_interviewer_emp = Employee.query.filter_by(id=current_interviewer.employee_id).first()
+        print(current_interviewer_emp)
+        candidate_list[interview] = current_candidate
+        interviewer_list[interview] = current_interviewer_emp
+    return render_template('view_interview_list.html', candidates=candidate_list, interviewers=interviewer_list,
+                           interviews=interviews)
 
 
 @app.route("/logout")
