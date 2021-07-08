@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app, db
-from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewInterviewerForm
 from app.models import Employee, Candidate, Interview, Interviewer, Position
 
 # candidate forms
@@ -122,6 +122,29 @@ def view_all_interviews():
         interviewer_list[interview] = current_interviewer_emp
     return render_template('view_interview_list.html', candidates=candidate_list, interviewers=interviewer_list,
                            interviews=interviews)
+
+
+@app.route('/interviewer/new', methods=['GET', 'POST'])
+def create_new_interviewer():
+    form = CreateNewInterviewerForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        # save the interviewer to db
+        interviewer = Interviewer()
+        interviewer_emp = Employee()
+        interviewer_emp.first_name = form.first_name.data
+        interviewer_emp.last_name = form.last_name.data
+        interviewer_emp.email = form.email.data
+        interviewer_emp.contact_number = form.contact_number.data
+        interviewer_emp.position = 'Employee'
+        interviewer_emp.password = 'password'
+        interviewer_emp.role = 'Interviewer'
+        db.session.add(interviewer_emp)
+        db.session.commit()
+        interviewer.employee_id = interviewer_emp.id
+        db.session.add(interviewer)
+        db.session.commit()
+        return redirect(url_for('view_all_interviews'))  # change this to view all interviewers.
+    return render_template('create_new_interviewer.html', form=form)
 
 
 @app.route("/logout")

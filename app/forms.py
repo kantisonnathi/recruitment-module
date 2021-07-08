@@ -20,6 +20,14 @@ class InterviewForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class CreateNewInterviewerForm(FlaskForm):
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+    contact_number = StringField('Contact Number')
+    email = StringField('Email')
+    submit = SubmitField('Submit')
+
+
 #manager Class
 class ManagerFeedbackForm(FlaskForm):
     feedback = StringField('Feedback', validators=[DataRequired()])
