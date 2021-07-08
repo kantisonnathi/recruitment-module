@@ -82,9 +82,7 @@ def setInterviewTime(interview_id):
         if curr_time in possible_start_times:
             possible_start_times.remove(curr_time)
     if request.method == 'POST':
-        print(request.form.get('start_time'))
         start_time = datetime.datetime.strptime(request.form.get('start_time'), "%H:%M:%S").time()
-        print(start_time)
         curr_interview.start_time = start_time
         end_time = datetime.time(start_time.hour+1, start_time.minute, start_time.second)
         curr_interview.end_time = end_time
