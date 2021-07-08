@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app, db
-from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewInterviewerForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewInterviewerForm, CreateNewPositionForm
 from app.models import Employee, Candidate, Interview, Interviewer, Position
 
 # candidate forms
@@ -47,7 +47,6 @@ def createNewInterview(candidate_id, job_id):
     form = InterviewForm()
     if request.method == 'POST' and form.validate_on_submit():
         interview = Interview()
-        print(request.form.get('interviewer'))
         interviewer_id = request.form.get('interviewer')
         interview.interviewer_id = interviewer_id
         interview.recruiter_id = current_user.id
@@ -145,6 +144,31 @@ def create_new_interviewer():
         db.session.commit()
         return redirect(url_for('view_all_interviews'))  # change this to view all interviewers.
     return render_template('create_new_interviewer.html', form=form)
+
+
+@app.route('/position/new', methods=['GET', 'POST'])
+def create_new_position():
+    form = CreateNewPositionForm()
+    if request.method == 'POST' and form.validate_on_submit():
+        position = Position()
+        position.title = form.title.data
+        position.description = form.description.data
+        db.session.add(position)
+        db.session.commit()
+        return redirect(url_for('view_all_positions'))
+    return render_template('create_new_position.html', form=form)
+
+
+@app.route('/position/all')
+def view_all_positions():
+    positions = Position.query.all()
+    return render_template('view_position_list.html', positions=positions)
+
+
+@app.route('/position/<position_id>')
+def view_position(position_id):
+    position = Position.query.filter_by(id=position_id).first()
+    return render_template('view_position.html', position=position)
 
 
 @app.route("/logout")

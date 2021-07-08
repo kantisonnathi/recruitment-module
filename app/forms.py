@@ -28,6 +28,12 @@ class CreateNewInterviewerForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
+class CreateNewPositionForm(FlaskForm):
+    title = StringField('Title')
+    description = StringField('Description')
+    submit = SubmitField('Submit')
+
+
 #manager Class
 class ManagerFeedbackForm(FlaskForm):
     feedback = StringField('Feedback', validators=[DataRequired()])

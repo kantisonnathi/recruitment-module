@@ -133,7 +133,8 @@ class Recruiter(db.Model):
 class Position(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
-    interviewer = db.relationship('Interview', backref='position')  # oen to many w interview
+    description = db.Column(db.String(500))
+    interviewer = db.relationship('Interview', backref='position')  # one to many w interview
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', title: ' + self.title

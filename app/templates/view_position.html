@@ -1,0 +1,11 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="content-section">
+        <h2>{{ position.title }}</h2>
+        <p>Position ID: {{ position.id }}</p>
+        <div class="content-section">
+            <p>Description: </p>
+            <p>{{ position.description }}</p>
+        </div>
+    </div>
+{% endblock %}
