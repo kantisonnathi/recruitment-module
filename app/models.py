@@ -134,6 +134,8 @@ class Position(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String)
     description = db.Column(db.String(500))
+    required_number = db.Column(db.Integer)
+    number_applied = db.Column(db.Integer)
     interviewer = db.relationship('Interview', backref='position')  # one to many w interview
 
     def __repr__(self):

@@ -4,7 +4,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app, db
-from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewInterviewerForm, CreateNewPositionForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewEmployeeForm, CreateNewPositionForm
 from app.models import Employee, Candidate, Interview, Interviewer, Position
 
 # candidate forms
@@ -125,7 +125,7 @@ def view_all_interviews():
 
 @app.route('/interviewer/new', methods=['GET', 'POST'])
 def create_new_interviewer():
-    form = CreateNewInterviewerForm()
+    form = CreateNewEmployeeForm()
     if request.method == 'POST' and form.validate_on_submit():
         # save the interviewer to db
         interviewer = Interviewer()
@@ -153,6 +153,8 @@ def create_new_position():
         position = Position()
         position.title = form.title.data
         position.description = form.description.data
+        position.required_number = form.required_number.data
+        position.number_applied = 0
         db.session.add(position)
         db.session.commit()
         return redirect(url_for('view_all_positions'))
@@ -169,6 +171,61 @@ def view_all_positions():
 def view_position(position_id):
     position = Position.query.filter_by(id=position_id).first()
     return render_template('view_position.html', position=position)
+
+
+@app.route('/position/<position_id>/update', methods=['GET', 'POST'])
+def update_position(position_id):
+    position = Position.query.filter_by(id=position_id).first()
+    form = CreateNewPositionForm()
+    if request.method == 'GET':
+        form.title.data = position.title
+        form.description.data = position.description
+        form.required_number.data = position.required_number
+        return render_template('create_new_position.html', form=form)
+    position.title = form.title.data
+    position.description = form.description.data
+    position.required_number = form.required_number.data
+    db.session.add(position)
+    db.session.commit()
+    return redirect(url_for('view_position', position_id=position.id))
+
+
+@app.route('/interviewer/all')
+def view_all_interviewers():
+    interviewers = Interviewer.query.all()
+    metadata = {}
+    for interviewer in interviewers:
+        emp = Employee.query.filter_by(id=interviewer.employee_id).first()
+        metadata[interviewer] = emp
+    return render_template('view_interviewer_list.html', interviewers=interviewers, metadata=metadata)
+
+
+@app.route('/update', methods=['GET', 'POST'])
+def update_info():  # PS: this works for all employees :)
+    form = CreateNewEmployeeForm()
+    if request.method == 'POST':
+        changes = False
+        if current_user.first_name != form.first_name.data:
+            current_user.first_name = form.first_name.data
+            changes = True
+        if current_user.last_name != form.last_name.data:
+            current_user.last_name = form.last_name.data
+            changes = True
+        if current_user.contact_number != form.contact_number.data:
+            current_user.contact_number = form.contact_number.data
+            changes = True
+        if current_user.email != form.email.data:
+            current_user.email = form.email.data
+            changes = True
+        if changes:
+            db.session.add(current_user)
+            db.session.commit()
+    else:
+        form.first_name.data = current_user.first_name
+        form.last_name.data = current_user.last_name
+        form.contact_number.data = current_user.contact_number
+        form.email.data = current_user.email
+    return render_template('update_self.html', form=form)
 
 
 @app.route("/logout")

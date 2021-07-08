@@ -20,7 +20,7 @@ class InterviewForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class CreateNewInterviewerForm(FlaskForm):
+class CreateNewEmployeeForm(FlaskForm):
     first_name = StringField('First Name')
     last_name = StringField('Last Name')
     contact_number = StringField('Contact Number')
@@ -31,6 +31,7 @@ class CreateNewInterviewerForm(FlaskForm):
 class CreateNewPositionForm(FlaskForm):
     title = StringField('Title')
     description = StringField('Description')
+    required_number = IntegerField('Number of Candidates required')
     submit = SubmitField('Submit')
 
 

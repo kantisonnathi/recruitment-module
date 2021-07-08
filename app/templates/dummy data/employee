@@ -35,4 +35,10 @@ date = datetime.date(2021,6,29)
 interview = Interview(start_time=time, end_time=time, date=date, round=1, meet_link='lol', feedback='lol', next_round=False, is_done=True, interviewer_id=1, candidate_id=1, recruiter_id=1,position_id=1)
 
 
-
+pos = Position()
+pos.title = 'job'
+pos.description = 'idk'
+pos.required_number = 5
+pos.number_applied = 6
+db.session.add(pos)
+db.session.commit()

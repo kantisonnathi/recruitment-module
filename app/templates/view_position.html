@@ -3,9 +3,12 @@
     <div class="content-section">
         <h2>{{ position.title }}</h2>
         <p>Position ID: {{ position.id }}</p>
+        <p>Number of Candidates required: {{ position.required_number }}</p>
+        <p>Number of candidates applied: {{ position.number_applied }}</p>
         <div class="content-section">
             <p>Description: </p>
             <p>{{ position.description }}</p>
         </div>
     </div>
+    <p><a href="{{ url_for('update_position', position_id=position.id) }}">Update Position details</a></p>
 {% endblock %}
