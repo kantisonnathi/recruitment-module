@@ -11,10 +11,12 @@
         </div>
         <div class="content-section">
             <legend class="border-bottom-b-mb-4">
-                Job Details
+                Position details
             </legend>
-            <p> Job Code: {{ job.id }}</p>
-            <p> Job title: {{ job.title }}</p>
+            <p>Code: {{ job.id }}</p>
+            <p>Title: {{ job.title }}</p>
+            <p>Description: {{ job.description }}</p>
+            <p>Required number of candidates: {{ job.required_number }}</p>
         </div>
         <div class="content-section">
             <form method="post" action="">
@@ -43,20 +45,6 @@
                             </div>
                         {% else %}
                             {{ form.date(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                    <div class="form-group">
-                        {{ form.round.label(class="form-control-label") }}
-
-                        {% if form.round.errors %}
-                            {{ form.round(class="form-control form-control-lg is-invalid") }}
-                            <div class="invalid-feedback">
-                                {% for error in form.round.errors %}
-                                    <span>{{ error }}</span>
-                                {% endfor %}
-                            </div>
-                        {% else %}
-                            {{ form.round(class="form-control form-control-lg") }}
                         {% endif %}
                     </div>
                 </fieldset>

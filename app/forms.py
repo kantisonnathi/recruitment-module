@@ -16,7 +16,6 @@ class LoginForm(FlaskForm):
 
 class InterviewForm(FlaskForm):
     date = DateField('Date', validators=[DataRequired()], default=datetime.date.today(), format='%d-%m-%Y')
-    round = IntegerField('Round')
     submit = SubmitField('Submit')
 
 

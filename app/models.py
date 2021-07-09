@@ -8,12 +8,6 @@ def load_user(employee_id):
     return Employee.query.get(int(employee_id))
 
 
-applied_to = db.Table('applied_to',
-                      db.Column('position_id', db.Integer, db.ForeignKey('position.id'), primary_key=True),
-                      db.Column('candidate_id', db.Integer, db.ForeignKey('candidate.id'), primary_key=True)
-                      )
-
-
 class Candidate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     first_name = db.Column(db.String(20))
@@ -23,14 +17,12 @@ class Candidate(db.Model):
     password = db.Column(db.String(255))
     pan_card = db.Column(db.String(10))
     current_location = db.Column(db.String(20))
-    status = db.Column(db.String(10))
     candidate_compensation = db.relationship('CandidateCompensation', backref='candidate', uselist=False)  # one to
     # one with candidate compensation
     candidate_professions = db.relationship('CandidateProfession', backref='candidate')  # one to many with candidate
     # profession
     candidate_educations = db.relationship('CandidateEducation', backref='candidate')  # one to many w education
-    positions_applied = db.relationship('Position', secondary=applied_to, lazy='subquery',
-                                        backref=db.backref('candidates', lazy=True))
+    applications = db.relationship('Application', backref='candidate')
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', name:' + str(self.first_name + ' ' + self.last_name)
@@ -102,9 +94,8 @@ class Interview(db.Model):
     next_round = db.Column(db.Boolean)
     is_done = db.Column(db.Boolean)
     interviewer_id = db.Column(db.Integer, db.ForeignKey('interviewer.id'))  # many to one w interviewer
-    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))  # many to one w candidate
     recruiter_id = db.Column(db.Integer, db.ForeignKey('recruiter.id'))  # many to one w recruiter
-    position_id = db.Column(db.Integer, db.ForeignKey('position.id'))  # many to one w position
+    application_id = db.Column(db.Integer, db.ForeignKey('application.id'))  # many to one with application
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', start_time: ' + str(self.start_time) + ', end time: ' + str(
@@ -136,10 +127,21 @@ class Position(db.Model):
     description = db.Column(db.String(500))
     required_number = db.Column(db.Integer)
     number_applied = db.Column(db.Integer)
-    interviewer = db.relationship('Interview', backref='position')  # one to many w interview
+    applications = db.relationship('Application', backref='application')
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', title: ' + self.title
+
+
+class Application(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    position_id = db.Column(db.Integer, db.ForeignKey('position.id'))
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))
+    round = db.Column(db.Integer, default=0)
+    status = db.Column(db.String(10))
+
+    def __repr__(self):
+        return 'id: ' + str(self.id) + ', pos id:' + str(self.position_id) + ', candidate id: ' + str(self.candidate_id)
 
 
 # Manager Feedback model

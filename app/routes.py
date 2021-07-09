@@ -5,7 +5,7 @@ from flask_login import current_user, login_user, logout_user
 
 from app import app, db
 from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewEmployeeForm, CreateNewPositionForm
-from app.models import Employee, Candidate, Interview, Interviewer, Position
+from app.models import Employee, Candidate, Interview, Interviewer, Position, Application
 
 # candidate forms
 from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidateApplicationDetails
@@ -38,22 +38,20 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 
-@app.route('/candidate/<int:candidate_id>/job/<int:job_id>/interview/new', methods=['GET', 'POST'])
-def createNewInterview(candidate_id, job_id):
-    # TODO: need to change job id to application id whenever it's done.
-    candidate = Candidate.query.filter_by(id=candidate_id).first()
-    job = Position.query.filter_by(id=job_id).first()
-    interviewers = Employee.query.filter_by(role='Interviewer').all()
+@app.route('/application/<int:application_id>/interview/new', methods=['GET', 'POST'])
+def create_new_interview(application_id):
+    current_application = Application.query.filter_by(id=application_id).first()
     form = InterviewForm()
+    candidate = Candidate.query.filter_by(id=current_application.candidate_id).first()
+    interviewers = Employee.query.filter_by(role='Interviewer').all()
+    job = Position.query.filter_by(id=current_application.position_id).first()
     if request.method == 'POST' and form.validate_on_submit():
         interview = Interview()
         interviewer_id = request.form.get('interviewer')
         interview.interviewer_id = interviewer_id
         interview.recruiter_id = current_user.id
-        interview.candidate_id = candidate.id
-        interview.position_id = job_id
+        interview.application_id = application_id
         interview.date = datetime.datetime.strptime(request.form.get('date'), "%d-%m-%Y").date()
-        interview.round = request.form.get('round')
         db.session.add(interview)
         db.session.commit()
         return redirect('/interview/' + str(interview.id) + '/set')
@@ -61,21 +59,14 @@ def createNewInterview(candidate_id, job_id):
                            candidate=candidate, job=job)
 
 
-@app.route('/interview/<interview_id>/delete')
-def delete_interview(interview_id):
-    Interview.query.filter_by(id=interview_id).delete()
-    db.session.commit()
-    return redirect(url_for('final_selected_candidates'))
-
-
-@app.route('/interview/<interview_id>/set', methods=['GET', 'POST'])
-def setInterviewTime(interview_id):
-    curr_interview = Interview.query.filter_by(id=interview_id).first()
-    interviewer = Interviewer.query.filter_by(id=curr_interview.interviewer_id).first()
-    candidate = Candidate.query.filter_by(id=curr_interview.candidate_id).first()
-    job = Position.query.filter_by(id=curr_interview.position_id).first()
+@app.route('/interview/<int:interview_id>/set', methods=['GET', 'POST'])
+def set_interview_time(interview_id):
+    current_interview = Interview.query.filter_by(id=interview_id).first()
+    current_application = Application.query.filter_by(id=current_interview.application_id).first()
+    current_candidate = Candidate.query.filter_by(id=current_application.candidate_id).first()
+    job = Position.query.filter_by(id=current_application.position_id).first()
+    interviewer = Interviewer.query.filter_by(id=current_interview.interviewer_id).first()
     interviews_by = Interview.query.filter_by(interviewer_id=interviewer.id).all()
-    # assumption: assume hours start at 9 and end at 6, each interview can only be an hour long
     possible_start_times = time_population()
     for interview in interviews_by:
         curr_time = interview.start_time
@@ -83,13 +74,27 @@ def setInterviewTime(interview_id):
             possible_start_times.remove(curr_time)
     if request.method == 'POST':
         start_time = datetime.datetime.strptime(request.form.get('start_time'), "%H:%M:%S").time()
-        curr_interview.start_time = start_time
-        end_time = datetime.time(start_time.hour+1, start_time.minute, start_time.second)
-        curr_interview.end_time = end_time
-        db.session.add(curr_interview)
+        current_interview.start_time = start_time
+        end_time = datetime.time(start_time.hour + 1, start_time.minute, start_time.second)
+        current_interview.end_time = end_time
+        current_application.round += 1
+        db.session.add(current_interview)
+        db.session.add(current_application)
         db.session.commit()
-        return redirect('/interview/' + interview_id)
-    return render_template('set_time_interview.html', candidate=candidate, job=job, interviewer=interviewer, times=possible_start_times)
+        return redirect(url_for('view_interview', interview_id=current_interview.id))
+    return render_template('set_time_interview.html', candidate=current_candidate, job=job, interviewer=interviewer,
+                           times=possible_start_times)
+
+
+@app.route('/interview/<interview_id>/delete')
+def delete_interview(interview_id):
+    curr_interview = Interview.query.filter_by(id=interview_id).first()
+    curr_application = Application.query.filter_by(id=curr_interview.application_id).first()
+    curr_application.round -= 1
+    Interview.query.filter_by(id=interview_id).delete()
+    db.session.add(curr_application)
+    db.session.commit()
+    return redirect(url_for('view_all_interviews'))
 
 
 @app.route('/interview/<interview_id>', methods=['GET', 'POST'])
@@ -97,10 +102,11 @@ def view_interview(interview_id):
     curr_interview = Interview.query.filter_by(id=interview_id).first()
     interviewer = Interviewer.query.filter_by(id=curr_interview.interviewer_id).first()
     interviewer_emp = Employee.query.filter_by(id=interviewer.employee_id).first()
-    candidate = Candidate.query.filter_by(id=curr_interview.candidate_id).first()
-    job = Position.query.filter_by(id=curr_interview.position_id).first()
+    current_application = Application.query.filter_by(id=curr_interview.application_id).first()
+    candidate = Candidate.query.filter_by(id=current_application.candidate_id).first()
+    job = Position.query.filter_by(id=current_application.position_id).first()
     return render_template('view_interview.html', position=job, candidate=candidate, interviewer=interviewer_emp,
-                           interview=curr_interview)
+                           interview=curr_interview, application=current_application)
 
 
 @app.route('/interview/all')
@@ -109,7 +115,8 @@ def view_all_interviews():
     interviewer_list = {}
     interviews = Interview.query.all()
     for interview in interviews:
-        current_candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+        current_application = Application.query.filter_by(id=interview.application_id).first()
+        current_candidate = Candidate.query.filter_by(id=current_application.candidate_id).first()
         current_interviewer = Interviewer.query.filter_by(id=interview.interviewer_id).first()
         current_interviewer_emp = Employee.query.filter_by(id=current_interviewer.employee_id).first()
         candidate_list[interview] = current_candidate
@@ -263,6 +270,7 @@ def manager_feedback(candidate_id):
             db.session.commit()
             return redirect(url_for('final_selected_candidates'))
 
+
 @app.route('/inprogress_candidates')
 def inprogress_candidates():
     candidates = Candidate.query.order_by(Candidate.id)
@@ -270,7 +278,6 @@ def inprogress_candidates():
 
 
 # interviewer routes
-
 
 
 # candidate routes

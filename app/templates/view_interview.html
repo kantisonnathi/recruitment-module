@@ -6,7 +6,7 @@
              <p>
                  Candidate name: {{ candidate.first_name + ' ' + candidate.last_name }}<br>
                  Candidate contact number: {{ candidate.contact_number }}<br>
-                 Candidate email: {{ candidate.email }}
+                 Candidate email: {{ candidate.email }}<br>
                  <a href="#">Click here for all candidate details</a>
              </p>
         </div>
@@ -16,6 +16,7 @@
                 Interviewer name: {{ interviewer.first_name + ' ' + interviewer.last_name }}<br>
                 Interviewer contact number: {{ interviewer.contact_number }}<br>
                 Interviewer email: {{ interviewer.email }}
+                <br>
                 <a href="#">Click here for all interviewer details</a>
             </p>
         </div>
@@ -33,7 +34,7 @@
                 Date of interview: {{ interview.date }}<br>
                 Interview start time: {{ interview.start_time }}<br>
                 Interview end time: {{ interview.end_time }}<br>
-                Round number: {{ interview.round }}
+                Round number: {{ application.round }}
             </p>
         </div>
         <a href={{ url_for('delete_interview',interview_id=interview.id) }}>Delete interview</a>
