@@ -73,6 +73,13 @@
                                 </a>
                             </li>
                         {% endif %}
+                        {% if current_user.role == 'Recruiter' %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('view_all_applications') }}">
+                                    Applications
+                                </a>
+                            </li>
+                        {% endif %}
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 Shortlisted Candidates

@@ -59,6 +59,19 @@ def create_new_interview(application_id):
                            candidate=candidate, job=job)
 
 
+@app.route('/application/all')
+def view_all_applications():
+    applications = Application.query.all()
+    meta_cand = {}
+    meta_pos = {}
+    for appl in applications:
+        curr_candidate = Candidate.query.filter_by(id=appl.candidate_id).first()
+        curr_pos = Position.query.filter_by(id=appl.position_id).first()
+        meta_cand[appl] = curr_candidate
+        meta_pos[appl] = curr_pos
+    return render_template('view_application_list.html', applications=applications, meta_cand=meta_cand, meta_pos=meta_pos)
+
+
 @app.route('/interview/<int:interview_id>/set', methods=['GET', 'POST'])
 def set_interview_time(interview_id):
     current_interview = Interview.query.filter_by(id=interview_id).first()
