@@ -42,3 +42,7 @@ pos.required_number = 5
 pos.number_applied = 6
 db.session.add(pos)
 db.session.commit()
+
+appl = Application(position_id=1, candidate_id=1,round=1, status='hired')
+db.session.add(appl)
+db.session.commit()

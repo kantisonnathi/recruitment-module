@@ -233,6 +233,7 @@ def update_info():  # PS: this works for all employees :)
             current_user.email = form.email.data
             changes = True
         if changes:
+            flash('Your changes have been saved!', 'info')
             db.session.add(current_user)
             db.session.commit()
     else:
@@ -241,6 +242,33 @@ def update_info():  # PS: this works for all employees :)
         form.contact_number.data = current_user.contact_number
         form.email.data = current_user.email
     return render_template('update_self.html', form=form)
+
+
+@app.route('/job/<int:job_id>/apply')
+def create_application(job_id):
+    role = current_user.role
+    """if role == 'Interviewer' or role == 'Recruiter' or role == 'Manager':
+        flash('You cannot apply for a job', 'warning')
+        return redirect(url_for('view_all_positions'))"""
+    appl = Application(candidate_id=current_user.id, position_id=job_id, round=0, status='NULL')
+    db.session.add(appl)
+    db.session.commit()
+    flash('You have applied for this job!', 'info')
+    return redirect(url_for('view_all_positions'))
+
+
+def time_population():
+    list_times = []
+    time = 9
+    done = False
+    while not done:
+        list_times.append(datetime.time(time, 0, 0))
+        time += 1
+        if time == 13:
+            time = 1
+        if time == 6:
+            break
+    return list_times
 
 
 @app.route("/logout")
@@ -320,15 +348,3 @@ def candidateRegister():
     return render_template('candidate_registration.html', title='candidateRegister', form=form)
 
 
-def time_population():
-    list_times = []
-    time = 9
-    done = False
-    while not done:
-        list_times.append(datetime.time(time, 0, 0))
-        time += 1
-        if time == 13:
-            time = 1
-        if time == 6:
-            break
-    return list_times

@@ -3,19 +3,22 @@
     <div class="content-section">
         <table class="table table-striped">
             <thead>
-                <tr>
-                    <th>Application ID</th>
-                    <th>Candidate Name</th>
-                    <th>Position title</th>
-                    <th>Action</th>
-                </tr>
+            <tr>
+                <th>Application ID</th>
+                <th>Candidate Name</th>
+                <th>Position title</th>
+                <th>Action</th>
+            </tr>
             </thead>
             <tbody>
+
                 {% for application in applications %}
+                    <tr>
                     <td>{{ application.id }}</td>
                     <td>{{ meta_cand[application].first_name + ' ' + meta_cand[application].last_name }}</td>
                     <td>{{ meta_pos[application].title }}</td>
                     <td><a href="{{ url_for('create_new_interview', application_id=application.id) }}">Schedule Interview</a></td>
+                    </tr>
                 {% endfor %}
             </tbody>
         </table>
