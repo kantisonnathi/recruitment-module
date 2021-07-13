@@ -14,7 +14,11 @@
           {% for candidate in candidates %}
           {% if candidate.status == 'none' %}
           <tr>
-            <td><b>{{ candidate.first_name }} {{candidate.last_name}}</b></td>
+            {% for candidate in candidates %}
+                  {% if candidate.id == application.candidate_id %}
+                    <td><b>{{ candidate.first_name }} {{ candidate.last_name }}</b></td>
+                  {% endif %}
+            {% endfor %}
             <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = candidate.id) }}">Details</a></td>
             <td> <a class="btn btn-primary" href="{{ url_for('candidate_interviews', candidate_id = candidate.id) }}">Interviews</a></td>
             <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', candidate_id = candidate.id) }}">Update</a></td>

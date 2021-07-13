@@ -16,8 +16,9 @@ from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, C
 def login():
     if current_user.is_authenticated:
         if current_user.role == "Manager":
+            applications = Application.query.order_by(Application.id)
             candidates = Candidate.query.order_by(Candidate.id)
-            return render_template('manager_candidates.html', candidates=candidates)
+            return render_template('manager_candidates.html', applications=applications, candidates=candidates)
         else:
             candidates = Candidate.query.order_by(Candidate.id)
             return render_template('all_candidates.html', candidates=candidates)
@@ -27,8 +28,9 @@ def login():
         if employee and employee.password == form.password.data:
             login_user(employee)
             if current_user.role == "Manager":
+                applications = Application.query.order_by(Application.id)
                 candidates = Candidate.query.order_by(Candidate.id)
-                return render_template('manager_candidates.html', candidates=candidates)
+                return render_template('manager_candidates.html', applications=applications, candidates=candidates)
             else:
                 candidates = Candidate.query.order_by(Candidate.id)
                 return render_template('all_candidates.html', candidates=candidates)
@@ -69,7 +71,8 @@ def view_all_applications():
         curr_pos = Position.query.filter_by(id=appl.position_id).first()
         meta_cand[appl] = curr_candidate
         meta_pos[appl] = curr_pos
-    return render_template('view_application_list.html', applications=applications, meta_cand=meta_cand, meta_pos=meta_pos)
+    return render_template('view_application_list.html', applications=applications, meta_cand=meta_cand,
+                           meta_pos=meta_pos)
 
 
 @app.route('/interview/<int:interview_id>/set', methods=['GET', 'POST'])
@@ -281,8 +284,9 @@ def logout():
 
 @app.route("/final_selected_candidates")
 def final_selected_candidates():
+    applications = Application.query.order_by(Application.id)
     candidates = Candidate.query.order_by(Candidate.id)
-    return render_template('final_selected_candidates.html', candidates=candidates)
+    return render_template('final_selected_candidates.html', applications=applications, candidates=candidates)
 
 
 @app.route('/info/<int:candidate_id>')
@@ -291,31 +295,43 @@ def info(candidate_id):
     return render_template('candidate_info.html', cur_candidate=cur_candidate)
 
 
-@app.route('/candidate_interviews/<int:candidate_id>')
-def candidate_interviews(candidate_id):
-    interviews = Interview.query.filter_by(candidate_id=candidate_id).order_by(Interview.round)
-    cur_candidate = Candidate.query.get_or_404(candidate_id)
+@app.route('/candidate_interviews/<int:application_id>')
+def candidate_interviews(application_id):
+    cur_application = Application.query.get_or_404(application_id)
+    interviews = Interview.query.filter_by(application_id=application_id).order_by(Interview.round)
+    cur_candidate = Candidate.query.get_or_404(cur_application.candidate_id)
     return render_template('interview_info.html', interviews=interviews, cur_candidate=cur_candidate)
 
 
-@app.route('/manager_feedback/<int:candidate_id>', methods=['GET', 'POST'])
-def manager_feedback(candidate_id):
+@app.route('/manager_feedback/<int:application_id>', methods=['GET', 'POST'])
+def manager_feedback(application_id):
     form = ManagerFeedbackForm()
-    candidate = Candidate.query.get_or_404(candidate_id)
+    cur_application = Application.query.get_or_404(application_id)
+    candidate = Candidate.query.get_or_404(cur_application.candidate_id)
     if request.method == 'GET':
-        return render_template('manager_feedback.html', candidate=candidate, form=form)
+        return render_template('manager_feedback.html', cur_application=cur_application, candidate=candidate, form=form)
     if request.method == 'POST':
-        if candidate.status == 'none':
-            candidate.status = form.candidate_status.data
-            db.session.add(candidate)
+        if cur_application.status == 'none':
+            cur_application.status = form.application_status.data
+            db.session.add(cur_application)
             db.session.commit()
             return redirect(url_for('final_selected_candidates'))
+        else:
+            return render_template('manager_feedback.html', cur_application=cur_application, candidate=candidate,
+                                   form=form)
 
 
 @app.route('/inprogress_candidates')
 def inprogress_candidates():
+    applications = Application.query.order_by(Application.id)
     candidates = Candidate.query.order_by(Candidate.id)
-    return render_template('inprogress_candidates.html', candidates=candidates)
+    return render_template('inprogress_candidates.html', candidates=candidates,applications=applications)
+
+
+@app.route('/manager_view_all_positions')
+def manager_view_all_positions():
+    positions = Position.query.all()
+    return render_template('manager_view_all_positions.html',positions=positions)
 
 
 # interviewer routes
@@ -346,5 +362,3 @@ def candidateRegister():
     if request.method == 'POST':
         return redirect(url_for('candidateLogin'))
     return render_template('candidate_registration.html', title='candidateRegister', form=form)
-
-

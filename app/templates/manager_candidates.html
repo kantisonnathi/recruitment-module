@@ -12,18 +12,22 @@
           </tr>
         </thead>
         <tbody>
-          {% for candidate in candidates %}
+          {% for application in applications %}
 
-          <tr>
-            <td><b>{{ candidate.first_name }} {{candidate.last_name}}</b></td>
-            <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = candidate.id) }}">Details</a></td>
-            <td> <a class="btn btn-primary" href="{{ url_for('candidate_interviews', candidate_id = candidate.id) }}">Interviews</a></td>
-            {% if candidate.status == 'HIRE' %}
-                <td>Hired</td>
-            {% else %}
-                <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', candidate_id=candidate.id) }}">Update</a></td>
-            {% endif %}
-          </tr>
+              <tr>
+              {% for candidate in candidates %}
+                  {% if candidate.id == application.candidate_id %}
+                    <td><b>{{ candidate.first_name }} {{ candidate.last_name }}</b></td>
+                  {% endif %}
+              {% endfor %}
+                <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = application.candidate.id) }}">Details</a></td>
+                <td> <a class="btn btn-primary" href="{{ url_for('candidate_interviews', application_id = application.id) }}">Interviews</a></td>
+                {% if application.status == 'Hired' %}
+                    <td>Hired</td>
+                {% else %}
+                    <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', application_id=application.id) }}">Update</a></td>
+                {% endif %}
+              </tr>
 
           {% endfor %}
         </tbody>
