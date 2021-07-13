@@ -37,7 +37,7 @@ class CandidateCompensation(db.Model):
     expected_ctc = db.Column(db.Float(3))
     current_ctc = db.Column(db.Float(3))
     notice_period = db.Column(db.Integer)
-    buyout_option = db.Column(db.Boolean)
+    buyout_option = db.Column(db.String(5))
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))  # one to one relationship with candidate
 
 

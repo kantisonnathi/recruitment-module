@@ -59,6 +59,7 @@ class CandidateEducationDetails(FlaskForm):
     graduationcgpa = StringField('CGPA(Out of 10)', validators=[DataRequired()])
     graduationcollege = SelectField('Name of the College', validators=[DataRequired()],
                                    choices=[graduationcollege.collegename for graduationcollege in CollegeList.query.all()])
+    #graduationcollege.collegename for graduationcollege in CollegeList.query.all()
     graduationplace = StringField('Place/Location', validators=[DataRequired()])
 
     postgraduationdegree = SelectField('Name of the Degree', validators=[DataRequired()],
@@ -68,6 +69,7 @@ class CandidateEducationDetails(FlaskForm):
     postgraduationcgpa = StringField('CGPA(Out of 10)', validators=[DataRequired()])
     postgraduationcollege = SelectField('Name of the College', validators=[DataRequired()],
                                   choices=[postgraduationcollege.collegename for postgraduationcollege in CollegeList.query.all()])
+    #postgraduationcollege.collegename for postgraduationcollege in CollegeList.query.all()
 
     postgraduationplace = StringField('Place/Location', validators=[DataRequired()])
     next = SubmitField('Next')
@@ -89,7 +91,8 @@ class CandidateCompensationDetails(FlaskForm):
     currentctc = FloatField('Current CTC', validators=[DataRequired()])
     expectedctc = FloatField('Expected CTC', validators=[DataRequired()])
     noticeperiod = IntegerField('Notice Period', validators=[DataRequired()])
-    buyoutoption = RadioField('Buyout Option', validators=[DataRequired()])
+    buyoutoption = SelectField('Buyout Option', validators=[DataRequired()],
+                               choices=['','Yes','No'])
     submit = SubmitField('Submit')
 
 

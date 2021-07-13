@@ -4,7 +4,7 @@ from flask_login import current_user, login_user, logout_user
 
 from app import app
 from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm
-from app.models import Employee, Candidate, Interview, Interviewer, CandidateEducation, CandidateProfession
+from app.models import Employee, Candidate, Interview, Interviewer, CandidateEducation, CandidateProfession, CandidateCompensation
 
 # candidate forms and validations imports
 from app import db, bcrypt
@@ -106,6 +106,7 @@ def candidate_personal():
         candidate.contact_number= form.contact.data
         candidate.current_location= form.current_location.data
         candidate.pan_card = form.pancard.data
+        #db.session.add(candidate)
         db.session.commit()
         return redirect(url_for('candidate_education',candidate_id=candidate.id))
     return render_template('candidate_personal_details.html', title='personal_details', form=form)
@@ -115,10 +116,10 @@ def candidate_personal():
 @app.route('/apply/<candidate_id>/education-details', methods=['GET','POST'])
 def candidate_education(candidate_id):
     form = CandidateEducationDetails()
+    education = CandidateEducation()
 
-    if request.method == 'POST':
-        education = CandidateEducation()
-        education.candidate_id= candidate_id
+    if form.validate_on_submit():
+        education.candidate_id = candidate_id
         education.school_board = form.schoolboard.data
         education.school_percentage = form.schoolpercentage.data
         education.school_cgpa = form.schoolcgpa.data
@@ -144,25 +145,45 @@ def candidate_education(candidate_id):
         education.postgraduation_place = form.postgraduationplace.data
         db.session.add(education)
         db.session.commit()
-        return redirect(url_for('candidate_profession'))
+        return redirect(url_for('candidate_profession', candidate_id = candidate_id))
     return render_template('candidate_education_details.html', title='education_details', form=form)
 
 
 # candidate profession details link
-@app.route('/apply/profession-details', methods=['GET','POST'])
-def candidate_profession():
+@app.route('/apply/<candidate_id>/profession-details', methods=['GET','POST'])
+def candidate_profession(candidate_id):
     form = CandidateProfessionDetails()
-    if request.method == 'POST':
-        return redirect(url_for('candidate_compensation'))
+    profession = CandidateProfession()
+
+    if form.validate_on_submit():
+        profession.candidate_id = candidate_id
+        profession.current_designation = form.currentdesignation.data
+        profession.years_of_experience = form.yearsofexperience.data
+        profession.company_name = form.companyname.data
+        profession.work_location = form.location.data
+        profession.key_skill_sets = form.keyskillsets.data
+        profession.linkedin_profile = form.linkedinprofile.data
+        db.session.add(profession)
+        db.session.commit()
+        return redirect(url_for('candidate_compensation', candidate_id = candidate_id))
     return render_template('candidate_profession_details.html', title='profession_details', form=form)
 
 
 # candidate compensation details
-@app.route('/apply/compensation-details', methods=['GET','POST'])
-def candidate_compensation():
+@app.route('/apply/<candidate_id>/compensation-details', methods=['GET','POST'])
+def candidate_compensation(candidate_id):
     form = CandidateCompensationDetails()
-    if request.method == 'POST':
-        return redirect(url_for('candidateLogin'))
+    compensation = CandidateCompensation()
+
+    if request.method=='POST' or form.validate_on_submit():
+        compensation.candidate_id = candidate_id
+        compensation.current_ctc = form.currentctc.data
+        compensation.expected_ctc = form.expectedctc.data
+        compensation.notice_period = form.noticeperiod.data
+        compensation.buyout_option = form.buyoutoption.data
+        db.session.add(compensation)
+        db.session.commit()
+        return redirect(url_for('candidateHome'))
     return render_template('candidate_compensation_details.html', title='compensation_details', form=form)
 
 # candidate home
