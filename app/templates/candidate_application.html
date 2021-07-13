@@ -51,7 +51,6 @@
       </fieldset>
       <br>
 
-
       <fieldset class="form-group" style="width:60%" name="candidate_education">
         <div class="container" name="candidate_education_details">
         <div class="content-section">
@@ -59,7 +58,24 @@
         </div>
         <br>
         <table class="table table-striped">
+            <tr>
+            <th scope="col"> {{ form.nameofthedegree.label(class="form-control-label") }} </th>
+            <th scope="col"> {{ form.yearofcompletion.label(class="form-control-label") }} </th>
+           </tr>
            <tr>
+            <td scope="col"> {{ form.nameofthedegree(class="form-control-label") }} </td>
+            <td scope="col"> {{ form.yearofcompletion(class="form-control-label") }} </td>
+           </tr>
+
+           <tr>
+            <th scope="col"> {{ form.percentage.label(class="form-control-label") }} </th>
+            <th scope="col"> {{ form.cgpa.label(class="form-control-label") }} </th>
+           </tr>
+           <tr>
+            <td scope="col"> {{ form.percentage(class="form-control-label") }} </td>
+            <td scope="col"> {{ form.cgpa(class="form-control-label") }} </td>
+           </tr>
+            <tr>
             <th scope="col"> {{ form.institutename.label(class="form-control-label") }} </th>
             <th scope="col"> {{ form.instituteplace.label(class="form-control-label") }} </th>
            </tr>
@@ -67,14 +83,7 @@
             <td scope="col"> {{ form.institutename(class="form-control-label") }} </td>
             <td scope="col"> {{ form.instituteplace(class="form-control-label") }} </td>
            </tr>
-           <tr>
-            <th scope="col"> {{ form.nameofthedegree.label(class="form-control-label") }} </th>
-            <th scope="col"> {{ form.percentage.label(class="form-control-label") }} </th>
-           </tr>
-           <tr>
-            <td scope="col"> {{ form.nameofthedegree(class="form-control-label") }} </td>
-            <td scope="col"> {{ form.percentage(class="form-control-label") }} </td>
-           </tr>
+
         </table>
         <br>
         <div class="form-group">
@@ -93,12 +102,12 @@
       <br>
       <table class="table table-striped">
          <tr>
-          <th scope="col"> {{ form.currentposition.label(class="form-control-label") }} </th>
+          <th scope="col"> {{ form.currentdesignation.label(class="form-control-label") }} </th>
           <th scope="col"> {{ form.yearsofexperience.label(class="form-control-label") }} </th>
          </tr>
          <tr>
-          <td scope="col"> {{ form.currentposition(class="form-control-label") }} </td>
-          <td scope="col"> {{ form.yearsofexperience(class="form-control-label") }} </td>
+          <td scope="col"> {{ form.currentdesignation(class="form-control-label") }} </td>
+          <td scope="colspan"> {{ form.yearsofexperience(class="form-control-label") }} </td>
          </tr>
          <tr>
           <th scope="col"> {{ form.companyname.label(class="form-control-label") }} </th>
@@ -109,11 +118,11 @@
           <td scope="col"> {{ form.location(class="form-control-label") }} </td>
          </tr>
          <tr>
-          <th scope="col"> {{ form.skillsets.label(class="form-control-label") }} </th>
+          <th scope="col"> {{ form.keyskillsets.label(class="form-control-label") }} </th>
           <th scope="col"> {{ form.linkedinprofile.label(class="form-control-label") }} </th>
          </tr>
          <tr>
-          <td scope="col"> {{ form.skillsets(class="form-control-label") }} </td>
+          <td scope="col"> {{ form.keyskillsets(class="form-control-label") }} </td>
           <td scope="col"> {{ form.linkedinprofile(class="form-control-label") }} </td>
          </tr>
       </table>
@@ -130,12 +139,12 @@
         <br>
         <table class="table table-striped">
            <tr>
-            <th scope="col"> {{ form.expectedctc.label(class="form-control-label") }} </th>
             <th scope="col"> {{ form.currentctc.label(class="form-control-label") }} </th>
+            <th scope="col"> {{ form.expectedctc.label(class="form-control-label") }} </th>
            </tr>
            <tr>
-            <td scope="col"> {{ form.expectedctc(class="form-control-label") }} </td>
             <td scope="col"> {{ form.currentctc(class="form-control-label") }} </td>
+            <td scope="col"> {{ form.expectedctc(class="form-control-label") }} </td>
            </tr>
            <tr>
             <th scope="col"> {{ form.noticeperiod.label(class="form-control-label") }} </th>

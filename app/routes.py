@@ -1,12 +1,15 @@
+import flask_bcrypt
 from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app
 from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm
-from app.models import Employee, Candidate, Interview, Interviewer
+from app.models import Employee, Candidate, Interview, Interviewer, CandidateEducation, CandidateProfession
 
-# candidate forms
-from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidateApplicationDetails
+# candidate forms and validations imports
+from app import db, bcrypt
+from app.candidate_forms import CandidateRegistrationForm, CandidateLoginForm, CandidatePersonalDetails, CandidateEducationDetails, CandidateCompensationDetails, CandidateProfessionDetails
+
 
 
 # recruiter routes
@@ -90,11 +93,82 @@ def manager_feedback(candidate_id):
 
 # candidate routes
 
-# candidate application link
-@app.route('/application-form', methods=['GET', 'POST'])
-def application():
-    form = CandidateApplicationDetails()
-    return render_template('candidate_application.html', title='application', form=form)
+# candidate application form links
+
+# candidate personal details link
+@app.route('/apply/personal-details', methods=['GET', 'POST'])
+def candidate_personal():
+    form = CandidatePersonalDetails()
+    if request.method=='POST':
+        candidate = Candidate.query.filter_by(email = form.email.data).first()
+        candidate.first_name= form.firstname.data
+        candidate.last_name= form.lastname.data
+        candidate.contact_number= form.contact.data
+        candidate.current_location= form.current_location.data
+        candidate.pan_card = form.pancard.data
+        db.session.commit()
+        return redirect(url_for('candidate_education',candidate_id=candidate.id))
+    return render_template('candidate_personal_details.html', title='personal_details', form=form)
+
+
+# candidate education details link
+@app.route('/apply/<candidate_id>/education-details', methods=['GET','POST'])
+def candidate_education(candidate_id):
+    form = CandidateEducationDetails()
+
+    if request.method == 'POST':
+        education = CandidateEducation()
+        education.candidate_id= candidate_id
+        education.school_board = form.schoolboard.data
+        education.school_percentage = form.schoolpercentage.data
+        education.school_cgpa = form.schoolcgpa.data
+        education.school_name = form.schoolname.data
+        education.school_place = form.schoolplace.data
+        education.intermediate_degree = form.intermediatedegree.data
+        education.intermediate_completion = form.intermediatecompletion.data
+        education.intermediate_percentage = form.intermediatepercentage.data
+        education.intermediate_cgpa = form.intermediatecgpa.data
+        education.intermediate_college = form.intermediatecollege.data
+        education.intermediate_place = form.intermediateplace.data
+        education.graduation_degree = form.graduationdegree.data
+        education.graduation_completion = form.graduationcompletion.data
+        education.graduation_percentage = form.graduationpercentage.data
+        education.graduation_cgpa = form.graduationcgpa.data
+        education.graduation_college = form.graduationcollege.data
+        education.graduation_place = form.graduationplace.data
+        education.postgraduation_degree = form.postgraduationdegree.data
+        education.postgraduation_completion = form.postgraduationcompletion.data
+        education.postgraduation_percentage = form.postgraduationpercentage.data
+        education.postgraduation_cgpa = form.postgraduationcgpa.data
+        education.postgraduation_college = form.postgraduationcollege.data
+        education.postgraduation_place = form.postgraduationplace.data
+        db.session.add(education)
+        db.session.commit()
+        return redirect(url_for('candidate_profession'))
+    return render_template('candidate_education_details.html', title='education_details', form=form)
+
+
+# candidate profession details link
+@app.route('/apply/profession-details', methods=['GET','POST'])
+def candidate_profession():
+    form = CandidateProfessionDetails()
+    if request.method == 'POST':
+        return redirect(url_for('candidate_compensation'))
+    return render_template('candidate_profession_details.html', title='profession_details', form=form)
+
+
+# candidate compensation details
+@app.route('/apply/compensation-details', methods=['GET','POST'])
+def candidate_compensation():
+    form = CandidateCompensationDetails()
+    if request.method == 'POST':
+        return redirect(url_for('candidateLogin'))
+    return render_template('candidate_compensation_details.html', title='compensation_details', form=form)
+
+# candidate home
+@app.route('/candidate', methods=['GET', 'POST'])
+def candidateHome():
+    return render_template('candidate_home.html', title = 'candidateHome')
 
 
 # candidate login link
@@ -102,7 +176,11 @@ def application():
 def candidateLogin():
     form = CandidateLoginForm()
     if form.validate_on_submit():
-        return redirect(url_for('application'))
+        candidate = Candidate.query.filter_by(email = form.email.data).first()
+        if candidate and bcrypt.check_password_hash(candidate.password, form.password.data):
+            return redirect(url_for('candidateHome'))
+        else:
+            flash('Invalid Login credentials.Please try again!!', 'danger')
     return render_template('candidate_login.html', title='candidateLogin', form=form)
 
 
@@ -110,6 +188,11 @@ def candidateLogin():
 @app.route('/candidate-registration', methods=['GET', 'POST'])
 def candidateRegister():
     form = CandidateRegistrationForm()
-    if request.method == 'POST':
+    if form.validate_on_submit():
+        hashed_password = flask_bcrypt.generate_password_hash(form.confirm_password.data).decode('utf-8')
+        user = Candidate(email=form.email.data, password=hashed_password)
+        db.session.add(user)
+        db.session.commit()
+        flash('Registered Successfully! You are now able to login', 'success')
         return redirect(url_for('candidateLogin'))
     return render_template('candidate_registration.html', title='candidateRegister', form=form)

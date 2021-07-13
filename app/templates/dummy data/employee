@@ -1,5 +1,5 @@
 from app import db -> imports db
-from app.models import Interviewer, Employee, Recruiter, Interview, Candidate
+from app.models import Interviewer, Employee, Recruiter, Interview, Candidate, CollegeList, CandidateEducation
 
 db.drop_all() -> this ensures old data is wiped
 

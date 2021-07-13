@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="site.db" uuid="0e6e9126-d7b1-47a1-af59-8d0e9a6eaf82">
+    <data-source source="LOCAL" name="site" uuid="096a9f87-3606-4299-93e8-c65e7e150c8d">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/app/site.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\999\PycharmProjects\recruitment-module\app\site.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
