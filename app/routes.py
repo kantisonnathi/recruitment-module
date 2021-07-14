@@ -336,6 +336,17 @@ def manager_view_all_positions():
     positions = Position.query.all()
     return render_template('manager_view_all_positions.html', positions=positions)
 
+@app.route('/push_to_manager/<int:application_id>')
+def push_to_manager(application_id):
+    application = Application.query.get_or_404(application_id)
+    application.push = True
+    db.session.add(application)
+    db.session.commit()
+    return redirect(url_for('view_all_applications'))
+
+
+
+
 
 # interviewer routes
 
