@@ -13,7 +13,7 @@
         </thead>
         <tbody>
           {% for application in applications %}
-
+              {% if application.push %}
               <tr>
               {% for candidate in candidates %}
                   {% if candidate.id == application.candidate_id %}
@@ -28,7 +28,7 @@
                     <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', application_id=application.id) }}">Update</a></td>
                 {% endif %}
               </tr>
-
+            {% endif %}
           {% endfor %}
         </tbody>
     </table>

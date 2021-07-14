@@ -8,6 +8,7 @@
                 <th>Candidate Name</th>
                 <th>Position title</th>
                 <th>Action</th>
+                <th>Push</th>
             </tr>
             </thead>
             <tbody>
@@ -18,6 +19,11 @@
                     <td>{{ meta_cand[application].first_name + ' ' + meta_cand[application].last_name }}</td>
                     <td>{{ meta_pos[application].title }}</td>
                     <td><a href="{{ url_for('create_new_interview', application_id=application.id) }}">Schedule Interview</a></td>
+                    {% if application.push == False %}
+                    <td><a class="btn btn-primary" href="{{ url_for('push_to_manager',application_id = application.id) }}">Push</a></td>
+                    {% else %}
+                    <td><b>Pushed</b></td>
+                    {% endif %}
                     </tr>
                 {% endfor %}
             </tbody>

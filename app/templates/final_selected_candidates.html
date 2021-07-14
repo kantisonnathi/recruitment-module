@@ -12,7 +12,7 @@
         </thead>
         <tbody>
           {% for application in applications %}
-              {% if application.status == 'Hired' %}
+              {% if application.status == 'Hired' and application.push %}
               <tr>
                 {% for candidate in candidates %}
                   {% if candidate.id == application.candidate_id %}

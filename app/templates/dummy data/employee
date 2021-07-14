@@ -5,12 +5,12 @@ db.drop_all() -> this ensures old data is wiped
 
 db.create_all()
 
-emp = Employee(first_name='emp1', last_name='last1', contact_number='+91emp1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Interviewer')
-db.session.add(emp)
+emp1 = Employee(first_name='emp1', last_name='last1', contact_number='+91emp1', email='emp1@gmail.com', password='pwd', position='senior manager', role='Interviewer')
+db.session.add(emp1)
 emp3 = Employee(first_name='manager', last_name='last1', contact_number='+91emp3', email='emp3@gmail.com', password='pwd', position='senior manager', role='Manager')
 db.session.add(emp3)
-emp1 = Employee(first_name='emp2', last_name='last2', contact_number='+91emp2', email='emp2@gmail.com', password='pwd', position='senior manager', role='Recruiter')
-db.session.add(emp1)
+emp2 = Employee(first_name='emp2', last_name='last2', contact_number='+91emp2', email='emp2@gmail.com', password='pwd', position='senior manager', role='Recruiter')
+db.session.add(emp2)
 
 
 interviewer1 = Interviewer(employee_id=emp.id)
@@ -39,26 +39,26 @@ interview = Interview(start_time=time, end_time=time, date=date, round=1, meet_l
 
 
 pos = Position()
-pos.title = 'job'
-pos.description = 'idk'
+pos.title = 'Software Engineer'
+pos.description = 'Product Engineering Intern'
 pos.required_number = 5
 pos.number_applied = 6
 db.session.add(pos)
 db.session.commit()
 
-appl = Application(position_id=1, candidate_id=1,round=1, status='hired',Feedback='Hired')
+app1 = Application(position_id=1, candidate_id=1,round=1, status='none',Feedback='none',push=False)
 
-db.session.add(appl)
+db.session.add(app1)
 db.session.commit()
 
-appl3 = Application(position_id=1, candidate_id=2,round=2, status='none',Feedback='none')
+appl3 = Application(position_id=1, candidate_id=2,round=1, status='none',Feedback='none',push=False)
 db.session.add(appl3)
 db.session.commit()
 
-appl4= Application(position_id=1,candidate_id=3,round=1,status='none',Feedback='none')
+appl4= Application(position_id=1,candidate_id=3,round=1,status='none',Feedback='none',push=False)
 db.session.add(appl4)
 db.session.commit()
 
-appl6= Application(position_id=1,candidate_id=6,round=1,status='none',Feedback='none')
+appl6= Application(position_id=1,candidate_id=4,round=1,status='none',Feedback='none',push=False)
 db.session.add(appl6)
 db.session.commit()
