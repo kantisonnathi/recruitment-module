@@ -7,13 +7,6 @@ from flask_login import UserMixin
 def load_user(employee_id):
     return Employee.query.get(int(employee_id))
 
-# Using login manager class to validate the candidate credentials
-
-""" @login_manager.user_loader
-def load_candidate(candidate_id):
-    return Candidate.query.get(int(candidate_id))
-"""
-
 
 class Candidate(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)

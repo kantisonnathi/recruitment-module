@@ -118,7 +118,7 @@ def candidate_education(candidate_id):
     form = CandidateEducationDetails()
     education = CandidateEducation()
 
-    if form.validate_on_submit():
+    if request.method == 'POST' or form.validate_on_submit():
         education.candidate_id = candidate_id
         education.school_board = form.schoolboard.data
         education.school_percentage = form.schoolpercentage.data
