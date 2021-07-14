@@ -140,6 +140,7 @@ class Application(db.Model):
     round = db.Column(db.Integer, default=0)
     status = db.Column(db.String(10))
     Feedback = db.Column(db.String(255))
+    push = db.Column(db.Boolean, default=False)
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', pos id:' + str(self.position_id) + ', candidate id: ' + str(self.candidate_id)
