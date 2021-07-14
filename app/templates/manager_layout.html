@@ -25,7 +25,7 @@
     <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top">
         <div class="container">
             {#<a class="navbar-brand mr-4" href="/">Flask Blog</a>#}
-            <img id="logo" src="{{ url_for('static', filename='aizant-logo.png') }}">
+            <img id="logo" src="{{ url_for('static', filename='aizant-logo-text.png') }}">
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -36,7 +36,7 @@
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                     {% if current_user.is_authenticated %}
-                        <a class="nav-item nav-link">Account</a>
+                        <a class="nav-item nav-link" href="{{ url_for('update_info') }}">Account</a>
                         <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
                     {% else %}
                         <a class="nav-item nav-link">Employee Login</a>
@@ -54,13 +54,18 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <a class="nav-link" href="{{ url_for('manager_view_all_positions') }}">
                       Openings/Positions
                   </a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="{{ url_for('login') }}">
-                  Shortlisted Candidates
+                  All Candidates
+                </a>
+              </li>
+               <li class="nav-item">
+                <a class="nav-link" href="{{ url_for('inprogress_candidates') }}">
+                    InProgress Candidates
                 </a>
               </li>
               <li class="nav-item">
@@ -68,11 +73,7 @@
                   Selected Candidates
                 </a>
               </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">
-                  Interviewers
-                </a>
-              </li>
+
 
             </ul>
           </div>

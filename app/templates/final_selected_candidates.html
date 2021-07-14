@@ -11,16 +11,19 @@
           </tr>
         </thead>
         <tbody>
-          {% for candidate in candidates %}
-          {% if candidate.status == 'HIRE' %}
-          <tr>
-            <td><b>{{ candidate.first_name }} {{candidate.last_name}}</b></td>
-            <td> <a class="btn btn-primary">Info</a></td>
-            <td> <a class="btn btn-primary">Interviews</a></td>
-            <!-- <td> <a ><button type="button" class="btn btn-primary">Update</button></a></td> -->
-            <td>Hired</td>
-          </tr>
-          {% endif %}
+          {% for application in applications %}
+              {% if application.status == 'Hired' and application.push %}
+              <tr>
+                {% for candidate in candidates %}
+                  {% if candidate.id == application.candidate_id %}
+                    <td><b>{{ candidate.first_name }} {{ candidate.last_name }}</b></td>
+                  {% endif %}
+                {% endfor %}
+                <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = application.candidate_id) }}">Details</a></td>
+                <td> <a class="btn btn-primary" href="{{ url_for('candidate_interviews', application_id = application.id) }}">Interviews</a></td>
+                <td>Hired</td>
+              </tr>
+              {% endif %}
           {% endfor %}
         </tbody>
     </table>

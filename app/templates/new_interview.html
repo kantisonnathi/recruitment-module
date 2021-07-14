@@ -1,94 +1,57 @@
 {% extends 'layout.html' %}
 {% block content %}
     <div class="content-section">
-        <form method="post" action="">
-            {{ form.hidden_tag() }}
-            <fieldset class="form-group">
-                <legend class="border-bottom-b-mb-4">
-                    Schedule New Interview
-                </legend>
-                <div class="form-group">
-                    <label for="interviewer">Interviewer</label>
-                    <select name="interviewer" class="btn btn-secondary dropdown-toggle ">
-                        {% for interviewer in interviewers %}
-                            <option class="dropdown-item" value={{interviewer.interviewer.id}}>{{interviewer.first_name}}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    {{ form.start_time.label(class="form-control-label") }}
-
-                    {% if form.start_time.errors %}
-                        {{ form.start_time(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.start_time.errors %}
-                                <span>{{ error }}</span>
+        <div class="content-section">
+            <legend class="border-bottom-b-mb-4">
+                Candidate Details
+            </legend>
+            <p> Name: {{ candidate.first_name + " " + candidate.last_name }}</p>
+            <p> Contact number: {{ candidate.contact_number }}</p>
+            <p> Email: {{ candidate.email }}</p>
+        </div>
+        <div class="content-section">
+            <legend class="border-bottom-b-mb-4">
+                Position details
+            </legend>
+            <p>Code: {{ job.id }}</p>
+            <p>Title: {{ job.title }}</p>
+            <p>Description: {{ job.description }}</p>
+            <p>Required number of candidates: {{ job.required_number }}</p>
+        </div>
+        <div class="content-section">
+            <form method="post" action="">
+                {{ form.hidden_tag() }}
+                <fieldset class="form-group">
+                    <legend class="border-bottom-b-mb-4">
+                        Schedule New Interview
+                    </legend>
+                    <div class="form-group">
+                        <label for="interviewer">Interviewer</label>
+                        <select name="interviewer" class="btn btn-secondary dropdown-toggle ">
+                            {% for interviewer in interviewers %}
+                                <option class="dropdown-item" value={{interviewer.interviewer.id}}>{{interviewer.first_name}}</option>
                             {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.start_time(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.end_time.label(class="form-control-label") }}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        {{ form.date.label(class="form-control-label") }}
 
-                    {% if form.end_time.errors %}
-                        {{ form.end_time(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.end_time.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.end_time(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
+                        {% if form.date.errors %}
+                            {{ form.date(class="form-control form-control-lg is-invalid") }}
+                            <div class="invalid-feedback">
+                                {% for error in form.date.errors %}
+                                    <span>{{ error }}</span>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            {{ form.date(class="form-control form-control-lg") }}
+                        {% endif %}
+                    </div>
+                </fieldset>
                 <div class="form-group">
-                    {{ form.date.label(class="form-control-label") }}
-
-                    {% if form.date.errors %}
-                        {{ form.date(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.date.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.date(class="form-control form-control-lg") }}
-                    {% endif %}
+                    {{ form.submit(class="btn btn-outline-info") }}
                 </div>
-                <div class="form-group">
-                    {{ form.round.label(class="form-control-label") }}
-
-                    {% if form.round.errors %}
-                        {{ form.round(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.round.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.round(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-                <div class="form-group">
-                    {{ form.meet_link.label(class="form-control-label") }}
-
-                    {% if form.meet_link.errors %}
-                        {{ form.meet_link(class="form-control form-control-lg is-invalid") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.meet_link.errors %}
-                                <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                    {% else %}
-                        {{ form.meet_link(class="form-control form-control-lg") }}
-                    {% endif %}
-                </div>
-            </fieldset>
-            <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
 {% endblock %}

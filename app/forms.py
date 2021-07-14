@@ -15,16 +15,27 @@ class LoginForm(FlaskForm):
 
 
 class InterviewForm(FlaskForm):
-    start_time = TimeField('Start time')
-    end_time = TimeField('End time')
     date = DateField('Date', validators=[DataRequired()], default=datetime.date.today(), format='%d-%m-%Y')
-    round = IntegerField('Round')
-    meet_link = StringField('Meet link')
+    submit = SubmitField('Submit')
+
+
+class CreateNewEmployeeForm(FlaskForm):
+    first_name = StringField('First Name')
+    last_name = StringField('Last Name')
+    contact_number = StringField('Contact Number')
+    email = StringField('Email')
+    submit = SubmitField('Submit')
+
+
+class CreateNewPositionForm(FlaskForm):
+    title = StringField('Title')
+    description = StringField('Description')
+    required_number = IntegerField('Number of Candidates required')
     submit = SubmitField('Submit')
 
 
 #manager Class
 class ManagerFeedbackForm(FlaskForm):
     feedback = StringField('Feedback', validators=[DataRequired()])
-    candidate_status = StringField('Status',validators=[DataRequired()])
+    application_status = StringField('Status',validators=[DataRequired()])
     submit = SubmitField('Submit')

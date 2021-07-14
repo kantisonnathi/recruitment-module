@@ -1,0 +1,26 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th scope="col">Interview ID</th>
+            <th scope="col">Candidate Name</th>
+            <th scope="col">Candidate Contact number</th>
+            <th scope="col">Interviewer Name</th>
+            <th scope="col">More Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for interview in interviews %}
+
+            <tr>
+                <td>{{ interview.id }}</td>
+                <td>{{ candidates[interview].first_name + ' ' + candidates[interview].last_name }}</td>
+                <td>{{ candidates[interview].contact_number }}</td>
+                <td>{{ interviewers[interview].first_name + ' ' + interviewers[interview].last_name }}</td>
+                <td><a href="{{ url_for('view_interview',interview_id=interview.id) }}">Click here for more details</a> </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

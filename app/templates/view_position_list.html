@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+{% block content %}
+    <div class="content-section">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">Position ID</th>
+                <th scope="col">Position Title</th>
+                <th scope="col">More Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for position in positions %}
+                <tr>
+                    <td>{{ position.id }}</td>
+                    <td>{{ position.title }}</td>
+                    {% if current_user.role %}
+                    <td><a href="{{ url_for('view_position', position_id=position.id) }}">Click here for more details</a> </td>
+                    {% else %}
+                    <td><a href="{{ url_for('create_application', job_id=position.id) }}">Apply for position</a> </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p>
+        <a class="ml-2" href="{{ url_for('create_new_position') }}">Add new Position</a>
+    </p>
+{% endblock %}
