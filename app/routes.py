@@ -313,6 +313,7 @@ def manager_feedback(application_id):
     if request.method == 'POST':
         if cur_application.status == 'none':
             cur_application.status = form.application_status.data
+            cur_application.Feedback = form.feedback.data
             db.session.add(cur_application)
             db.session.commit()
             return redirect(url_for('final_selected_candidates'))
@@ -325,13 +326,13 @@ def manager_feedback(application_id):
 def inprogress_candidates():
     applications = Application.query.order_by(Application.id)
     candidates = Candidate.query.order_by(Candidate.id)
-    return render_template('inprogress_candidates.html', candidates=candidates,applications=applications)
+    return render_template('inprogress_candidates.html', candidates=candidates, applications=applications)
 
 
 @app.route('/manager_view_all_positions')
 def manager_view_all_positions():
     positions = Position.query.all()
-    return render_template('manager_view_all_positions.html',positions=positions)
+    return render_template('manager_view_all_positions.html', positions=positions)
 
 
 # interviewer routes

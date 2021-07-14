@@ -20,6 +20,9 @@ candidate = Candidate(first_name='cand1', last_name='last', contact_number='+91c
 candidate2 = Candidate(first_name='cand2', last_name='last2', contact_number='+91cand2', email='cand2@gmail.com', password='pwd', pan_card='pan2', current_location='hyd')
 db.session.add(candidate)
 db.session.add(candidate2)
+candidate4 = Candidate(first_name='cand4', last_name = 'last4', contact_number='+91cand4',email='cand4@gmail.com',password='pwd',pan_card='pan4',current_location='viz')
+candidate5 = Candidate(first_name='cand5', last_name = 'last5', contact_number='+91cand5',email='cand5@gmail.com',password='pwd',pan_card='pan5',current_location='vsp')
+candidate6 = Candidate(first_name='cand6', last_name = 'last6', contact_number='+91cand6',email='cand6@gmail.com',password='pwd',pan_card='pan6',current_location='vsp')
 recruiter = Recruiter(employee_id=2)
 db.session.add(recruiter)
 
@@ -50,4 +53,12 @@ db.session.commit()
 
 appl3 = Application(position_id=1, candidate_id=2,round=2, status='none',Feedback='none')
 db.session.add(appl3)
+db.session.commit()
+
+appl4= Application(position_id=1,candidate_id=3,round=1,status='none',Feedback='none')
+db.session.add(appl4)
+db.session.commit()
+
+appl6= Application(position_id=1,candidate_id=6,round=1,status='none',Feedback='none')
+db.session.add(appl6)
 db.session.commit()

@@ -20,10 +20,10 @@
                     <td><b>{{ candidate.first_name }} {{ candidate.last_name }}</b></td>
                   {% endif %}
               {% endfor %}
-                <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = application.candidate.id) }}">Details</a></td>
+                <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = application.candidate_id) }}">Details</a></td>
                 <td> <a class="btn btn-primary" href="{{ url_for('candidate_interviews', application_id = application.id) }}">Interviews</a></td>
-                {% if application.status == 'Hired' %}
-                    <td>Hired</td>
+                {% if application.status != 'none' %}
+                    <td>{{ application.status }}</td>
                 {% else %}
                     <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', application_id=application.id) }}">Update</a></td>
                 {% endif %}
