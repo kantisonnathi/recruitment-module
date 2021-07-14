@@ -53,6 +53,7 @@ def create_new_interview(application_id):
         interview.interviewer_id = interviewer_id
         interview.recruiter_id = current_user.id
         interview.application_id = application_id
+        interview.duration = request.form.get('duration')
         interview.date = datetime.datetime.strptime(request.form.get('date'), "%d-%m-%Y").date()
         db.session.add(interview)
         db.session.commit()
@@ -160,7 +161,7 @@ def create_new_interviewer():
         interviewer.employee_id = interviewer_emp.id
         db.session.add(interviewer)
         db.session.commit()
-        return redirect(url_for('view_all_interviewers'))  # change this to view all interviewers.
+        return redirect(url_for('view_all_interviewers'))
     return render_template('create_new_interviewer.html', form=form)
 
 
@@ -265,8 +266,7 @@ def create_application(job_id):
 def time_population():
     list_times = []
     time = 9
-    done = False
-    while not done:
+    while True:
         list_times.append(datetime.time(time, 0, 0))
         time += 1
         if time == 13:
