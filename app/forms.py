@@ -37,5 +37,5 @@ class CreateNewPositionForm(FlaskForm):
 #manager Class
 class ManagerFeedbackForm(FlaskForm):
     feedback = StringField('Feedback', validators=[DataRequired()])
-    candidate_status = StringField('Status',validators=[DataRequired()])
+    application_status = StringField('Status',validators=[DataRequired()])
     submit = SubmitField('Submit')

@@ -36,7 +36,7 @@
                 <!-- Navbar Right Side -->
                 <div class="navbar-nav">
                     {% if current_user.is_authenticated %}
-                        <a class="nav-item nav-link">Account</a>
+                        <a class="nav-item nav-link" href="{{ url_for('update_info') }}">Account</a>
                         <a class="nav-item nav-link" href="{{ url_for('logout') }}">Logout</a>
                     {% else %}
                         <a class="nav-item nav-link">Employee Login</a>
@@ -54,7 +54,7 @@
           <div class="sidebar-sticky">
             <ul class="nav flex-column">
               <li class="nav-item">
-                  <a class="nav-link" href="#">
+                  <a class="nav-link" href="{{ url_for('manager_view_all_positions') }}">
                       Openings/Positions
                   </a>
               </li>

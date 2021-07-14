@@ -1,5 +1,5 @@
 from app import db -> imports db
-from app.models import Interviewer, Employee, Recruiter, Interview, Candidate, Position
+from app.models import Interviewer, Employee, Recruiter, Interview, Candidate, Position, Application
 
 db.drop_all() -> this ensures old data is wiped
 
@@ -16,10 +16,13 @@ db.session.add(emp1)
 interviewer1 = Interviewer(employee_id=emp.id)
 db.session.add(interviewer1)
 
-candidate = Candidate(first_name='cand1', last_name='last', contact_number='+91cand', email='cand@gmail.com', password='pwd', pan_card='pan', current_location='hyd', status='none')
-candidate = Candidate(first_name='cand2', last_name='last2', contact_number='+91cand2', email='cand2@gmail.com', password='pwd', pan_card='pan2', current_location='hyd', status='HIRE')
+candidate = Candidate(first_name='cand1', last_name='last', contact_number='+91cand', email='cand@gmail.com', password='pwd', pan_card='pan', current_location='hyd')
+candidate2 = Candidate(first_name='cand2', last_name='last2', contact_number='+91cand2', email='cand2@gmail.com', password='pwd', pan_card='pan2', current_location='hyd')
 db.session.add(candidate)
-
+db.session.add(candidate2)
+candidate4 = Candidate(first_name='cand4', last_name = 'last4', contact_number='+91cand4',email='cand4@gmail.com',password='pwd',pan_card='pan4',current_location='viz')
+candidate5 = Candidate(first_name='cand5', last_name = 'last5', contact_number='+91cand5',email='cand5@gmail.com',password='pwd',pan_card='pan5',current_location='vsp')
+candidate6 = Candidate(first_name='cand6', last_name = 'last6', contact_number='+91cand6',email='cand6@gmail.com',password='pwd',pan_card='pan6',current_location='vsp')
 recruiter = Recruiter(employee_id=2)
 db.session.add(recruiter)
 
@@ -32,7 +35,7 @@ date = datetime.date(2021,6,29)
 
 # just dummy data. don't worry about accuracy
 
-interview = Interview(start_time=time, end_time=time, date=date, round=1, meet_link='lol', feedback='lol', next_round=False, is_done=True, interviewer_id=1, candidate_id=1, recruiter_id=1,position_id=1)
+interview = Interview(start_time=time, end_time=time, date=date, round=1, meet_link='**********', feedback='Good in python , selected for the next round', next_round=False, is_done=True, interviewer_id=1, recruiter_id=1,application_id=1)
 
 
 pos = Position()
@@ -43,6 +46,19 @@ pos.number_applied = 6
 db.session.add(pos)
 db.session.commit()
 
-appl = Application(position_id=1, candidate_id=1,round=1, status='hired')
+appl = Application(position_id=1, candidate_id=1,round=1, status='hired',Feedback='Hired')
+
 db.session.add(appl)
+db.session.commit()
+
+appl3 = Application(position_id=1, candidate_id=2,round=2, status='none',Feedback='none')
+db.session.add(appl3)
+db.session.commit()
+
+appl4= Application(position_id=1,candidate_id=3,round=1,status='none',Feedback='none')
+db.session.add(appl4)
+db.session.commit()
+
+appl6= Application(position_id=1,candidate_id=6,round=1,status='none',Feedback='none')
+db.session.add(appl6)
 db.session.commit()

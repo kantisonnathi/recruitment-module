@@ -139,13 +139,8 @@ class Application(db.Model):
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'))
     round = db.Column(db.Integer, default=0)
     status = db.Column(db.String(10))
+    Feedback = db.Column(db.String(255))
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', pos id:' + str(self.position_id) + ', candidate id: ' + str(self.candidate_id)
 
-
-# Manager Feedback model
-class ManagerFeedback:
-    id = db.Column(db.Integer, primary_key=True)
-    Feedback = db.Column(db.String(255))
-    Status = db.Column(db.String(20))
