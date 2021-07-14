@@ -157,7 +157,7 @@ def create_new_interviewer():
         interviewer.employee_id = interviewer_emp.id
         db.session.add(interviewer)
         db.session.commit()
-        return redirect(url_for('view_all_interviews'))  # change this to view all interviewers.
+        return redirect(url_for('view_all_interviewers'))  # change this to view all interviewers.
     return render_template('create_new_interviewer.html', form=form)
 
 
@@ -172,6 +172,7 @@ def create_new_position():
         position.number_applied = 0
         db.session.add(position)
         db.session.commit()
+        flash('New position has been added!', 'info')
         return redirect(url_for('view_all_positions'))
     return render_template('create_new_position.html', form=form)
 
@@ -202,6 +203,7 @@ def update_position(position_id):
     position.required_number = form.required_number.data
     db.session.add(position)
     db.session.commit()
+    flash('New details have been saved!', 'info')
     return redirect(url_for('view_position', position_id=position.id))
 
 
@@ -247,9 +249,9 @@ def update_info():  # PS: this works for all employees :)
 @app.route('/job/<int:job_id>/apply')
 def create_application(job_id):
     role = current_user.role
-    """if role == 'Interviewer' or role == 'Recruiter' or role == 'Manager':
+    if role == 'Interviewer' or role == 'Recruiter' or role == 'Manager':
         flash('You cannot apply for a job', 'warning')
-        return redirect(url_for('view_all_positions'))"""
+        return redirect(url_for('view_all_positions'))
     appl = Application(candidate_id=current_user.id, position_id=job_id, round=0, status='NULL')
     db.session.add(appl)
     db.session.commit()

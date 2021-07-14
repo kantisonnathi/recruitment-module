@@ -25,7 +25,9 @@
             <p>
                 Position code: {{ position.id }}<br>
                 Position title: {{ position.title }}<br>
-                Position description: todo: add desc to pos class
+                Position description: {{ position.description }}
+                <br>
+                <a href="{{ url_for('view_position', position_id=position.id) }}">Click here for all position details</a>
             </p>
         </div>
         <div class="content-section">
