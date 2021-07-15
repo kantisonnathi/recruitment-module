@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, IntegerField, FloatField, TextAreaField, RadioField, ValidationError, SelectField, SelectMultipleField
 from wtforms.validators import DataRequired, Email, EqualTo
-from app.models import Candidate, CollegeList
+from app.models import Candidate
 
 
 
@@ -53,22 +53,22 @@ class CandidateEducationDetails(FlaskForm):
     intermediateplace = StringField('Place/Location', validators=[DataRequired()])
 
     graduationdegree = SelectField('Name of the Degree', validators=[DataRequired()],
-                                     choices=['','B.Tech', 'B.E', 'B.Sc', 'Others'])
+                                     choices=['','B.Tech', 'B.E', 'B.Sc', 'B.Pharm', 'BCA', 'MBBS', 'Others'])
     graduationcompletion = IntegerField('Year of Completion', validators=[DataRequired()])
     graduationpercentage = StringField('Percentage', validators=[DataRequired()])
     graduationcgpa = StringField('CGPA(Out of 10)', validators=[DataRequired()])
     graduationcollege = SelectField('Name of the College', validators=[DataRequired()],
-                                   choices=[graduationcollege.collegename for graduationcollege in CollegeList.query.all()])
+                                   choices=['','JNTUk','JNTUH'])
     #graduationcollege.collegename for graduationcollege in CollegeList.query.all()
     graduationplace = StringField('Place/Location', validators=[DataRequired()])
 
     postgraduationdegree = SelectField('Name of the Degree', validators=[DataRequired()],
-                                   choices=['','M.Tech', 'M.E', 'M.Sc', 'Others'])
+                                   choices=['','M.Tech', 'M.E', 'M.Sc', 'M.Pharm', 'MCA', 'MS', 'Others'])
     postgraduationcompletion = IntegerField('Year of Completion', validators=[DataRequired()])
     postgraduationpercentage = StringField('Percentage', validators=[DataRequired()])
     postgraduationcgpa = StringField('CGPA(Out of 10)', validators=[DataRequired()])
     postgraduationcollege = SelectField('Name of the College', validators=[DataRequired()],
-                                  choices=[postgraduationcollege.collegename for postgraduationcollege in CollegeList.query.all()])
+                                  choices=['','JNTUk','JNTUH'])
     #postgraduationcollege.collegename for postgraduationcollege in CollegeList.query.all()
 
     postgraduationplace = StringField('Place/Location', validators=[DataRequired()])
@@ -88,9 +88,9 @@ class CandidateProfessionDetails(FlaskForm):
 
 
 class CandidateCompensationDetails(FlaskForm):
-    currentctc = FloatField('Current CTC', validators=[DataRequired()])
-    expectedctc = FloatField('Expected CTC', validators=[DataRequired()])
-    noticeperiod = IntegerField('Notice Period', validators=[DataRequired()])
+    currentctc = FloatField('Current CTC (INR)', validators=[DataRequired()])
+    expectedctc = FloatField('Expected CTC (INR)', validators=[DataRequired()])
+    noticeperiod = IntegerField('Notice Period (In months)', validators=[DataRequired()])
     buyoutoption = SelectField('Buyout Option', validators=[DataRequired()],
                                choices=['','Yes','No'])
     submit = SubmitField('Submit')

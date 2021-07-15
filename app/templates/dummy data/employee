@@ -1,5 +1,5 @@
 from app import db -> imports db
-from app.models import Interviewer, Employee, Recruiter, Interview, Candidate, Position, Application
+from app.models import Interviewer, Employee, Recruiter, Interview, Candidate, Position, Application, CandidateCompensation, CandidateProfession, CandidateEducation, Interviewer, Manager
 
 db.drop_all() -> this ensures old data is wiped
 
@@ -25,7 +25,9 @@ candidate5 = Candidate(first_name='cand5', last_name = 'last5', contact_number='
 candidate6 = Candidate(first_name='cand6', last_name = 'last6', contact_number='+91cand6',email='cand6@gmail.com',password='pwd',pan_card='pan6',current_location='vsp')
 recruiter = Recruiter(employee_id=2)
 db.session.add(recruiter)
-
+db.session.add(candidate4)
+db.session.add(candidate5)
+db.session.add(candidate6)
 db.session.commit()
 
 
