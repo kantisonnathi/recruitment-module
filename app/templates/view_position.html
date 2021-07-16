@@ -10,5 +10,9 @@
             <p>{{ position.description }}</p>
         </div>
     </div>
-    <p><a href="{{ url_for('update_position', position_id=position.id) }}">Update Position details</a></p>
+    <p>
+        {% if current_user.role == 'Recruiter' %}
+        <a href="{{ url_for('update_position', position_id=position.id) }}">Update Position details</a>
+        {% endif %}
+    </p>
 {% endblock %}

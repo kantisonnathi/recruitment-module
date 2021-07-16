@@ -25,6 +25,8 @@
         </table>
     </div>
     <p>
+        {% if current_user.role == 'Recruiter' %}
         <a class="ml-2" href="{{ url_for('create_new_position') }}">Add new Position</a>
+        {% endif %}
     </p>
 {% endblock %}
