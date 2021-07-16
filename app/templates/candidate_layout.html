@@ -1,10 +1,11 @@
-/candidate/<candidate_id_str>/job/<job_id_str>/interview/new<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='jquery.slim.min.js') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+
 
 </head>
 <body>
@@ -16,9 +17,23 @@
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
         </div>
     </nav>
 </header>
-{% block content %}{% endblock %}
+  <!-- <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">  -->
+            <div class="col-sm-9" style="width: 60%">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ category }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+            </div>
+  <!-- </main>  -->
+  {% block content %}{% endblock %}
 </body>
 </html>
