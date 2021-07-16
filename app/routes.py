@@ -268,6 +268,7 @@ def time_population():
     time = 9
     while True:
         list_times.append(datetime.time(time, 0, 0))
+        list_times.append(datetime.time(time, 30, 0))
         time += 1
         if time == 13:
             time = 1
