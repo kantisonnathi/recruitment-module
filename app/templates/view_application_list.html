@@ -8,7 +8,7 @@
                 <th>Candidate Name</th>
                 <th>Position title</th>
                 <th>Action</th>
-                <th>Push</th>
+                <th>Finalize</th>
             </tr>
             </thead>
             <tbody>
@@ -20,9 +20,9 @@
                     <td>{{ meta_pos[application].title }}</td>
                     <td><a href="{{ url_for('create_new_interview', application_id=application.id) }}">Schedule Interview</a></td>
                     {% if application.push == False %}
-                    <td><a class="btn btn-primary" href="{{ url_for('push_to_manager',application_id = application.id) }}">Push</a></td>
+                    <td><a class="btn btn-primary" href="{{ url_for('push_to_manager',application_id = application.id) }}">Finalize</a></td>
                     {% else %}
-                    <td><b>Pushed</b></td>
+                    <td><b>Finalized</b></td>
                     {% endif %}
                     </tr>
                 {% endfor %}

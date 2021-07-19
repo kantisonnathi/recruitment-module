@@ -12,7 +12,7 @@
         </thead>
         <tbody>
           {% for application in applications %}
-              {% if application.status == 'Hire' and application.push %}
+              {% if application.status == 'Hold' or application.status== 'Collect Documents'  %}
               <tr>
                 {% for candidate in candidates %}
                   {% if candidate.id == application.candidate_id %}
@@ -21,7 +21,8 @@
                 {% endfor %}
                 <td> <a class="btn btn-primary" href="{{ url_for('info', candidate_id = application.candidate_id) }}">Details</a></td>
                 <td> <a class="btn btn-primary" href="{{ url_for('candidate_interviews', application_id = application.id) }}">Interviews</a></td>
-                <td>Hired</td>
+{#                <td>Hold</td>#}
+                <td> <a class="btn btn-primary" href="{{ url_for('manager_feedback', application_id=application.id) }}">on Hold</a></td>
               </tr>
               {% endif %}
           {% endfor %}

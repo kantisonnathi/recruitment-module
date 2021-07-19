@@ -2,7 +2,7 @@ import datetime
 
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
-from wtforms import StringField, PasswordField, SubmitField, BooleanField, TimeField, DateField, IntegerField
+from wtforms import StringField, PasswordField, SubmitField, BooleanField, TimeField, DateField, IntegerField,SelectField
 from wtforms.validators import DataRequired, Length, Email, EqualTo, ValidationError
 from app.models import Employee, Candidate
 from flask_login import current_user
@@ -37,5 +37,5 @@ class CreateNewPositionForm(FlaskForm):
 #manager Class
 class ManagerFeedbackForm(FlaskForm):
     feedback = StringField('Feedback', validators=[DataRequired()])
-    application_status = StringField('Status',validators=[DataRequired()])
+    application_status = SelectField('Status',validators=[DataRequired()],choices=['Hire','Hold','Collect Documents','Reject'])
     submit = SubmitField('Submit')
