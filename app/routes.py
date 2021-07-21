@@ -297,7 +297,10 @@ def final_selected_candidates():
 @app.route('/info/<int:candidate_id>')
 def info(candidate_id):
     cur_candidate = Candidate.query.get_or_404(candidate_id)
-    return render_template('candidate_info.html', cur_candidate=cur_candidate)
+    curr_candidate_education = CandidateEducation.query.get_or_404(candidate_id)
+    curr_candidate_compensation = CandidateCompensation.query.get_or_404(candidate_id)
+    curr_candidate_profession = CandidateProfession.query.get_or_404(candidate_id)
+    return render_template('candidate_info.html', cur_candidate=cur_candidate,curr_candidate_education=curr_candidate_education,curr_candidate_compensation=curr_candidate_compensation,curr_candidate_profession=curr_candidate_profession)
 
 
 @app.route('/candidate_interviews/<int:application_id>')

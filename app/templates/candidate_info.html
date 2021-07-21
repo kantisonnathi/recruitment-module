@@ -1,5 +1,6 @@
 {% extends 'manager_layout.html' %}
 {% block content %}
+        <h1>Candidate Personal Details</h1>
         <table class="table-striped" border="1" style="width:100%; border-collapse: collapse; border: 3px solid deepskyblue;" >
         <tr>
         <th>Candidate ID</th><td>{{ cur_candidate.id}}</td>
@@ -28,5 +29,53 @@
 
         </table>
 
+        <h1 style="margin-top: 50px;">Education Details</h1>
+        <table class="table-striped" border="1" style="width:100%; border-collapse: collapse; border: 3px solid deepskyblue;">
+        <tr>
+        <th>Degree</th><th>school name</th><th>Percentage</th><th>CGPA</th><th>Location</th>
+        </tr>
+        <tr>
+            <th>School</th><td>{{ curr_candidate_education.school_name }}</td><td>{{ curr_candidate_education.school_percentage }}</td><td>{{ curr_candidate_education.school_cgpa }}</td><td>{{ curr_candidate_education.school_place }}</td>
+        </tr>
+        <tr>
+            <th>+2/Intermediate</th><td>{{ curr_candidate_education.intermediate_college }}</td><td>{{ curr_candidate_education.intermediate_percentage }}</td><td>{{ curr_candidate_education.intermediate_cgpa }}</td><td>{{ curr_candidate_education.intermediate_place }}</td>
+        </tr>
+        <tr>
+            <th>Under Graduation</th><td>{{ curr_candidate_education.graduation_college }}</td><td>{{ curr_candidate_education.graduation_percentage }}</td><td>{{ curr_candidate_education.graduation_cgpa }}</td><td>{{ curr_candidate_education.graduation_place }}</td>
+        </tr>
+        <tr>
+            <th>Post Graduatoin</th><td>{{ curr_candidate_education.postgraduation_college }}</td><td>{{ curr_candidate_education.postgraduation_percentage }}</td><td>{{ curr_candidate_education.postgraduation_cgpa }}</td><td>{{ curr_candidate_education.postgraduation_place }}</td>
+        </tr>
+        </table>
+
+        <h1 style="margin-top: 50px;">Candidate Compensation</h1>
+        <table class="table-striped" border="1" style="width:100%; border-collapse: collapse; border: 3px solid deepskyblue;">
+        <tr>
+            <th>Current CTC(INR)</th><th>Expected CTC(INR)</th><th>notice_period(In Months)</th><th>buyout</th>
+        </tr>
+        <tr>
+            <td>{{ curr_candidate_compensation.current_ctc }}</td><td>{{ curr_candidate_compensation.expected_ctc }}</td><td>{{ curr_candidate_compensation.notice_period }}</td><td>{{ curr_candidate_compensation.buyout_option }}</td>
+        </tr>
+        </table>
+
+        <h1 style="margin-top: 50px;">Candidate Experience</h1>
+        <table class="table-striped" border="1" style="width:100%; border-collapse: collapse; border: 3px solid deepskyblue;">
+        <tr>
+            <th>Current Designation</th><td>{{ curr_candidate_profession.current_designation }}</td>
+        </tr>
+        <tr>
+            <th>Company Name</th><td>{{ curr_candidate_profession.company_name }}</td>
+        </tr>
+        <tr>
+            <th>Years of Experience</th><td>{{ curr_candidate_profession.years_of_experience }}</td>
+        </tr>
+         <tr>
+             <th>Company Location</th><td>{{ curr_candidate_profession.work_location }}</td>
+         </tr>
+         <tr>    <th>Key Skill Set</th><td>{{ curr_candidate_profession.key_skill_sets }}</td>
+         </tr>
+          <tr>   <th>LinkedIn Profile</th><td>{{ curr_candidate_profession.linkedin_profile }}</td>
+          </tr>
+        </table>
 {% endblock %}
 
