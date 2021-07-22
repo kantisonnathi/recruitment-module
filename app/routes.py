@@ -402,7 +402,8 @@ def interviewer_feedback(candidate_id):
     #    interviewer_feedback.append(Interviewer_Feedback.query.get_or_404(candidate_id))
 
     if request.method == 'GET':
-        return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form , skills = skills, no_of_skills = no_of_skills)
+        #return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form , skills = skills, no_of_skills = no_of_skills)
+	return render_template('interviewer_feedback.html', candidate=candidate, form = form)
     if request.method == 'POST':
         if interview.feedback == '':
             candidate.status = form.interview_status.data
