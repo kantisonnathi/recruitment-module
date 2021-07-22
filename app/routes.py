@@ -360,7 +360,79 @@ def manager_hold_applications():
 
 
 # interviewer routes
+@app.route('/interviewer_candidates_left', methods=['GET', 'POST'])
+def interviewer_candidates_left():
+    candidate = Candidate.query.get_or_404(Candidate.id)
+    interviews = Interview.query.filter_by(is_done=False).filter_by(interviewer_id=current_user.id)
+    emdict = {}
+    for interview in interviews:
+	    candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+	    emdict[interview] = candidate
+    return render_template('interviewer_candidates_left.html', emdict=emdict, interviews=interviews)
 
+@app.route('/information/<int:candidate_id>', methods=['GET', 'POST'])
+def information(candidate_id):
+    candidate = Candidate.query.get_or_404(candidate_id)
+    return render_template('information.html', candidate=candidate)
+
+@app.route('/interviewer_candidate_feedback', methods=['GET', 'POST'])
+def interviewer_candidate_feedback():
+    interviews = Interview.query.filter_by(is_done=True).filter_by(interviewer_id=current_user.id).filter_by(feedback='')
+    emdict = {}
+    for interview in interviews:
+	    candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+	    emdict[interview] = candidate
+    return render_template('interviewer_candidate_feedback.html', interviews=interviews, emdict=emdict)
+
+@app.route('/interviewer_feedback/<int:candidate_id>', methods=['GET', 'POST'])
+def interviewer_feedback(candidate_id):
+    #skills = CandidateProfession.query.get_or_404(candidate_id)
+    #skills = skills.split(",")
+    #no_of_skills = skills.length()
+    #forms = []
+    #for skill in skills:
+    #    forms.append(InterviewerFeedbackForm())
+    #    db.session.add(Interviewer_Feedback(candidate_id = candidate_id, skill = skill))
+    #    db.session.commit()
+    form = InterviewerFeedbackForm()
+    candidate = Candidate.query.get_or_404(candidate_id)
+    interview = Interview.query.filter_by(candidate_id=candidate_id).first()
+    #interviewer_feedback = []
+    #for skill in skills:
+    #    interviewer_feedback.append(Interviewer_Feedback.query.get_or_404(candidate_id))
+
+    if request.method == 'GET':
+        return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form , skills = skills, no_of_skills = no_of_skills)
+    if request.method == 'POST':
+        if interview.feedback == '':
+            candidate.status = form.interview_status.data
+            interview.feedback = form.feedback.data
+            #i = 0
+            #for skill in skills:
+            #    interviewer_feedback[i].feedback = forms[i].feedback.data
+            #    db.session.add(interviewer_feedback[i])
+            #    db.session.commit()
+            #candidate.status = ''
+            #interview.feedback = ''
+    
+            #candidate.status = ''
+            #interview.feedback = ''
+            db.session.add(candidate)
+            db.session.add(interview)
+            db.session.commit()
+            return redirect(url_for('interviewer_candidate_done'))
+        else:
+            return redirect(url_for('interviewer_candidate_done'))
+
+@app.route('/interviewer_candidate_done', methods=['GET', 'POST'])
+def interviewer_candidate_done():
+    interviews = Interview.query.filter_by(is_done=True).filter_by(interviewer_id=current_user.id)
+    emdict = {}
+    for interview in interviews:
+        if (interview.feedback != ''):
+	        candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+	        emdict[interview] = candidate
+    return render_template("interviewer_candidate_done.html", interviews=interviews, emdict=emdict)
 
 # candidate routes
 
