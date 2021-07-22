@@ -1,0 +1,32 @@
+{% extends 'interviewer_layout.html' %}
+{% block content %}
+      <table class="table table-striped">
+        <thead>
+          <tr>
+
+            <th scope="col">Candidate Name</th>
+            <th scope="col">Information</th>
+            <th scope="col">Round No</th>
+            <th scope="col">Feedback</th>
+            <th scope="col">Current Status</th>
+
+          </tr>
+        </thead>
+        <tbody>
+          {% for interview in interviews %}
+          {% if emdict[interview] %}
+          <tr>
+            <td><b>{{ emdict[interview].first_name }} {{ emdict[interview].last_name }}</b></td>
+            <td> <a class="btn btn-primary" href="{{ url_for('information', candidate_id=emdict[interview].id) }}">Information</a></td>
+            <td> {{ interview.round }}</td>
+            <td> {{ interview.feedback }}</td>
+            <td> {{ emdict[interview].status }}</td>
+          </tr>
+          {% endif %}
+          {% endfor %}
+        </tbody>
+    </table>
+
+    {% endblock %}
+
+    <!---->
