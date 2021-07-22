@@ -21,9 +21,12 @@ def login():
             applications = Application.query.order_by(Application.id)
             candidates = Candidate.query.order_by(Candidate.id)
             return render_template('manager_candidates.html', applications=applications, candidates=candidates)
+	elif current_user.role == "Interviewer":
+	    return render_template('interviewer_layout.html')
         else:
             candidates = Candidate.query.order_by(Candidate.id)
             return render_template('all_candidates.html', candidates=candidates)
+	
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         employee = Employee.query.filter_by(email=form.email.data).first()
@@ -33,6 +36,8 @@ def login():
                 applications = Application.query.order_by(Application.id)
                 candidates = Candidate.query.order_by(Candidate.id)
                 return render_template('manager_candidates.html', applications=applications, candidates=candidates)
+	    elif current_user.role == "Interviewer":
+	        return render_template('interviewer_layout.html')
             else:
                 candidates = Candidate.query.order_by(Candidate.id)
                 return render_template('all_candidates.html', candidates=candidates)
