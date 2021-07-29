@@ -34,11 +34,11 @@ class CreateNewPositionForm(FlaskForm):
     submit = SubmitField('Submit')
 
 #interviewer Class
-
-class InterviewerFeedbackForm(FlaskForm):
-    feedback = StringField('Feedback', validators=[DataRequired()])
-    interview_status = StringField('Status', validators=[DataRequired])
-    submit = SubmitField('Submit')
+#
+# class InterviewerFeedbackForm(FlaskForm):
+#     feedback = StringField('Feedback', validators=[DataRequired()])
+#     interview_status = StringField('Status', validators=[DataRequired])
+#     submit = SubmitField('Submit')
 
 #manager Class
 class ManagerFeedbackForm(FlaskForm):

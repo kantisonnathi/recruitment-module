@@ -3,7 +3,7 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app
-from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewEmployeeForm, CreateNewPositionForm, InterviewerFeedbackForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewEmployeeForm, CreateNewPositionForm
 from app.models import Employee, Candidate, Interview, Interviewer, Application, Position, CandidateEducation, \
     CandidateProfession, CandidateCompensation
 
@@ -21,12 +21,12 @@ def login():
             applications = Application.query.order_by(Application.id)
             candidates = Candidate.query.order_by(Candidate.id)
             return render_template('manager_candidates.html', applications=applications, candidates=candidates)
-	elif current_user.role == "Interviewer":
-	    return render_template('interviewer_layout.html')
+        elif current_user.role == "Interviewer":
+            return render_template('interviewer_layout.html')
         else:
             candidates = Candidate.query.order_by(Candidate.id)
             return render_template('all_candidates.html', candidates=candidates)
-	
+
     form = LoginForm()
     if request.method == 'POST' and form.validate_on_submit():
         employee = Employee.query.filter_by(email=form.email.data).first()
@@ -36,8 +36,8 @@ def login():
                 applications = Application.query.order_by(Application.id)
                 candidates = Candidate.query.order_by(Candidate.id)
                 return render_template('manager_candidates.html', applications=applications, candidates=candidates)
-	    elif current_user.role == "Interviewer":
-	        return render_template('interviewer_layout.html')
+            elif current_user.role == "Interviewer":
+                return render_template('interviewer_layout.html')
             else:
                 candidates = Candidate.query.order_by(Candidate.id)
                 return render_template('all_candidates.html', candidates=candidates)
@@ -254,7 +254,10 @@ def update_info():  # PS: this works for all employees :)
         form.last_name.data = current_user.last_name
         form.contact_number.data = current_user.contact_number
         form.email.data = current_user.email
-    return render_template('update_self.html', form=form)
+    if current_user.role == "Manager":
+        return render_template('update_manager_self.html', form=form)
+    else:
+        return render_template('update_self.html', form=form)
 
 
 @app.route('/job/<int:job_id>/apply')
@@ -305,7 +308,10 @@ def info(candidate_id):
     curr_candidate_education = CandidateEducation.query.get_or_404(candidate_id)
     curr_candidate_compensation = CandidateCompensation.query.get_or_404(candidate_id)
     curr_candidate_profession = CandidateProfession.query.get_or_404(candidate_id)
-    return render_template('candidate_info.html', cur_candidate=cur_candidate,curr_candidate_education=curr_candidate_education,curr_candidate_compensation=curr_candidate_compensation,curr_candidate_profession=curr_candidate_profession)
+    return render_template('candidate_info.html', cur_candidate=cur_candidate,
+                           curr_candidate_education=curr_candidate_education,
+                           curr_candidate_compensation=curr_candidate_compensation,
+                           curr_candidate_profession=curr_candidate_profession)
 
 
 @app.route('/candidate_interviews/<int:application_id>')
@@ -329,6 +335,12 @@ def manager_feedback(application_id):
             cur_application.Feedback = form.feedback.data
             db.session.add(cur_application)
             db.session.commit()
+            # if form.application_status == 'Reject':
+            #     return redirect(url_for('manager_rejected_applications'))
+            # elif form.application_status == 'Hire':
+            #     return redirect(url_for('final_selected_candidates'))
+            # else:
+            #     return redirect(url_for('login'))
             return redirect(url_for('final_selected_candidates'))
         else:
             return render_template('manager_feedback.html', cur_application=cur_application, candidate=candidate,
@@ -364,6 +376,13 @@ def manager_hold_applications():
     return render_template('manager_hold_applications.html', candidates=candidates, applications=applications)
 
 
+@app.route('/manager_rejected_applications')
+def manager_rejected_applications():
+    applications = Application.query.order_by(Application.id)
+    candidates = Candidate.query.order_by(Candidate.id)
+    return render_template('manager_rejected_applications.html', candidates=candidates, applications=applications)
+
+
 # interviewer routes
 @app.route('/interviewer_candidates_left', methods=['GET', 'POST'])
 def interviewer_candidates_left():
@@ -371,58 +390,62 @@ def interviewer_candidates_left():
     interviews = Interview.query.filter_by(is_done=False).filter_by(interviewer_id=current_user.id)
     emdict = {}
     for interview in interviews:
-	    candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
-	    emdict[interview] = candidate
+        candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+        emdict[interview] = candidate
     return render_template('interviewer_candidates_left.html', emdict=emdict, interviews=interviews)
+
 
 @app.route('/information/<int:candidate_id>', methods=['GET', 'POST'])
 def information(candidate_id):
     candidate = Candidate.query.get_or_404(candidate_id)
     return render_template('information.html', candidate=candidate)
 
+
 @app.route('/interviewer_candidate_feedback', methods=['GET', 'POST'])
 def interviewer_candidate_feedback():
-    interviews = Interview.query.filter_by(is_done=True).filter_by(interviewer_id=current_user.id).filter_by(feedback='')
+    interviews = Interview.query.filter_by(is_done=True).filter_by(interviewer_id=current_user.id).filter_by(
+        feedback='')
     emdict = {}
     for interview in interviews:
-	    candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
-	    emdict[interview] = candidate
+        candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+        emdict[interview] = candidate
     return render_template('interviewer_candidate_feedback.html', interviews=interviews, emdict=emdict)
+
 
 @app.route('/interviewer_feedback/<int:candidate_id>', methods=['GET', 'POST'])
 def interviewer_feedback(candidate_id):
-    #skills = CandidateProfession.query.get_or_404(candidate_id)
-    #skills = skills.split(",")
-    #no_of_skills = skills.length()
-    #forms = []
-    #for skill in skills:
+    # skills = CandidateProfession.query.get_or_404(candidate_id)
+    # skills = skills.split(",")
+    # no_of_skills = skills.length()
+    # forms = []
+    # for skill in skills:
     #    forms.append(InterviewerFeedbackForm())
     #    db.session.add(Interviewer_Feedback(candidate_id = candidate_id, skill = skill))
     #    db.session.commit()
     form = InterviewerFeedbackForm()
     candidate = Candidate.query.get_or_404(candidate_id)
     interview = Interview.query.filter_by(candidate_id=candidate_id).first()
-    #interviewer_feedback = []
-    #for skill in skills:
+    # interviewer_feedback = []
+    # for skill in skills:
     #    interviewer_feedback.append(Interviewer_Feedback.query.get_or_404(candidate_id))
 
     if request.method == 'GET':
-        #return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form , skills = skills, no_of_skills = no_of_skills)
-	return render_template('interviewer_feedback.html', candidate=candidate, form = form)
+        # return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form , skills = skills, no_of_skills = no_of_skills)
+        return render_template('interviewer_feedback.html', candidate=candidate, form=form)
     if request.method == 'POST':
         if interview.feedback == '':
             candidate.status = form.interview_status.data
             interview.feedback = form.feedback.data
-            #i = 0
-            #for skill in skills:
+            # i = 0
+            # for skill in skills:
             #    interviewer_feedback[i].feedback = forms[i].feedback.data
             #    db.session.add(interviewer_feedback[i])
             #    db.session.commit()
-            #candidate.status = ''
-            #interview.feedback = ''
-    
-            #candidate.status = ''
-            #interview.feedback = ''
+            # candidate.status = ''
+            # interview.feedback = ''
+
+            # candidate.status = ''
+            # interview.feedback = ''
             db.session.add(candidate)
             db.session.add(interview)
             db.session.commit()
@@ -430,15 +453,17 @@ def interviewer_feedback(candidate_id):
         else:
             return redirect(url_for('interviewer_candidate_done'))
 
+
 @app.route('/interviewer_candidate_done', methods=['GET', 'POST'])
 def interviewer_candidate_done():
     interviews = Interview.query.filter_by(is_done=True).filter_by(interviewer_id=current_user.id)
     emdict = {}
     for interview in interviews:
         if (interview.feedback != ''):
-	        candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
-	        emdict[interview] = candidate
+            candidate = Candidate.query.filter_by(id=interview.candidate_id).first()
+            emdict[interview] = candidate
     return render_template("interviewer_candidate_done.html", interviews=interviews, emdict=emdict)
+
 
 # candidate routes
 
