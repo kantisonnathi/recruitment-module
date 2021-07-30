@@ -3,7 +3,8 @@ from flask import render_template, url_for, flash, redirect, request
 from flask_login import current_user, login_user, logout_user
 
 from app import app
-from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewEmployeeForm, CreateNewPositionForm
+from app.forms import LoginForm, InterviewForm, ManagerFeedbackForm, CreateNewEmployeeForm, CreateNewPositionForm, \
+    InterviewerFeedbackForm
 from app.models import Employee, Candidate, Interview, Interviewer, Application, Position, CandidateEducation, \
     CandidateProfession, CandidateCompensation
 
@@ -401,6 +402,25 @@ def information(candidate_id):
     return render_template('information.html', candidate=candidate)
 
 
+@app.route('/all_interviews')
+def all_interviews():
+    interviews = Interview.query.all()
+    return render_template('all_interviews.html', interviews=interviews)
+
+
+@app.route('/interview_feedback_form/<int:application_id>', methods=['GET', 'POST'])
+def interview_feedback_form(application_id):
+    application = Application.query.get_or_404(application_id)
+    if request.method == 'POST':
+        print("hello",application_id)
+        if request.files:
+            image = request.files["myfile"]
+            print(image)
+        return render_template('interview_upload.html', application=application)
+    else:
+        return render_template('interview_upload.html', application=application)
+
+
 @app.route('/interviewer_candidate_feedback', methods=['GET', 'POST'])
 def interviewer_candidate_feedback():
     interviews = Interview.query.filter_by(is_done=True).filter_by(interviewer_id=current_user.id).filter_by(
@@ -430,7 +450,8 @@ def interviewer_feedback(candidate_id):
     #    interviewer_feedback.append(Interviewer_Feedback.query.get_or_404(candidate_id))
 
     if request.method == 'GET':
-        # return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form , skills = skills, no_of_skills = no_of_skills)
+        # return render_template('interviewer_feedback.html', candidate=candidate, forms=forms, form = form ,
+        # skills = skills, no_of_skills = no_of_skills)
         return render_template('interviewer_feedback.html', candidate=candidate, form=form)
     if request.method == 'POST':
         if interview.feedback == '':

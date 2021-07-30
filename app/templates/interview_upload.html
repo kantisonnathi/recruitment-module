@@ -1,0 +1,11 @@
+{% extends 'interviewer_layout.html' %}
+{% block content %}
+    <div>
+    <form action="/interview_feedback_form/{{ application.id }}" method="POST" enctype="multipart/form-data">
+        <legend>Upload file for application -> {{ application.id }}</legend>
+        <input type="file" name="myfile"/>
+        <input class="btn btn-primary" type="submit">
+    </form>
+    </div>
+{% endblock %}
+{##{{ url_for('interview_feedback_form',application_id=application_id) }}#}

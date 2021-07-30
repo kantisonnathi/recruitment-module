@@ -166,4 +166,8 @@ class Application(db.Model):
 
     def __repr__(self):
         return 'id: ' + str(self.id) + ', pos id:' + str(self.position_id) + ', candidate id: ' + str(self.candidate_id)
-
+#
+# class Interview_Feedback_Forms(db.Model):
+#     id = db.Column(db.Integer,primary_key=True)
+#     application_id = db.Column(db.Integer, db.ForeignKey('application.id'))
+#     file =

@@ -13,7 +13,7 @@
     <p>
         {% if current_user.role == 'Recruiter' %}
             <a href="{{ url_for('update_position', position_id=position.id) }}">Update Position details</a>
-        {% elif %}
+        {% elif current_user.role == 'Candidate'%}
             <a href="{{ url_for('create_application', job_id=position.id) }}">Apply for position</a>
         {% endif %}
     </p>
